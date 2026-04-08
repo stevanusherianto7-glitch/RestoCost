@@ -11,7 +11,7 @@ import ConfirmModal from '../components/ConfirmModal';
 
 const schema = z.object({
   name: z.string().min(1, "Nama bahan wajib diisi"),
-  category: z.enum(['perishable', 'dry_goods', 'condiment', 'processed', 'supplies']),
+  category: z.enum(['perishable', 'dry_goods', 'condiment', 'processed', 'supplies', 'spices']),
   buy_price: z.number().min(0, "Harga beli tidak boleh negatif"),
   buy_unit: z.string().min(1, "Satuan beli wajib diisi"),
   conversion_qty: z.number().min(0.0001, "Isi per satuan harus lebih dari 0"),
@@ -26,6 +26,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   condiment: 'Bumbu & Saus',
   processed: 'Bahan Olahan',
   supplies: 'Kemasan & Lainnya',
+  spices: 'Bahan Rempah & Aromatik',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -34,12 +35,13 @@ const CATEGORY_COLORS: Record<string, string> = {
   condiment: 'bg-orange-50 text-orange-600 border-orange-100',
   processed: 'bg-blue-50 text-blue-600 border-blue-100',
   supplies: 'bg-slate-50 text-slate-600 border-slate-100',
+  spices: 'bg-teal-50 text-teal-600 border-teal-100',
 };
 
 export default function Ingredients() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [filterCategory, setFilterCategory] = useState<'all' | 'perishable' | 'dry_goods' | 'condiment' | 'processed' | 'supplies'>('all');
+  const [filterCategory, setFilterCategory] = useState<'all' | 'perishable' | 'dry_goods' | 'condiment' | 'processed' | 'supplies' | 'spices'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [ingToDelete, setIngToDelete] = useState<number | null>(null);

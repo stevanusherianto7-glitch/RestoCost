@@ -1,9 +1,5 @@
-export type IngredientCategory = 
-  | 'perishable' 
-  | 'dry_goods' 
-  | 'condiment' 
-  | 'processed' 
-  | 'supplies';
+  | 'supplies' 
+  | 'spices';
 
 export interface Ingredient {
   id: number;

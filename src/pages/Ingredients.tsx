@@ -4,7 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Plus, Trash2, Edit2, Save, X, Search, Filter, Database } from 'lucide-react';
+import { Plus, Trash2, Edit2, Save, X, Search, Filter, Database, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Ingredient } from '../types';
 import { DataService } from '../services/dataService';
 import ConfirmModal from '../components/ConfirmModal';
@@ -104,6 +106,46 @@ export default function Ingredients() {
     return matchesCategory && matchesSearch;
   });
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    // Add Header
+    doc.setFontSize(22);
+    doc.setTextColor(15, 23, 42); // slate-900
+    doc.text("Laporan Database Bahan Baku", 14, 22);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100, 116, 139); // slate-500
+    doc.text(`Dicetak pada: ${new Date().toLocaleString('id-ID')}`, 14, 30);
+    doc.text(`Total: ${filteredIngredients.length} Item`, 14, 35);
+    
+    // Generate Table
+    const tableData = filteredIngredients.map((ing, index) => [
+      index + 1,
+      ing.name,
+      CATEGORY_LABELS[ing.category] || ing.category,
+      `Rp ${ing.buy_price.toLocaleString('id-ID')}`,
+      ing.buy_unit,
+      `Rp ${(ing.buy_price / (ing.conversion_qty || 1)).toLocaleString('id-ID', { maximumFractionDigits: 2 })} / ${ing.usage_unit}`
+    ]);
+    
+    autoTable(doc, {
+      startY: 45,
+      head: [['No', 'Item / Bahan', 'Kategori', 'Harga Beli', 'Unit', 'Harga / Satuan Pakai']],
+      body: tableData,
+      headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' }, // emerald-500
+      alternateRowStyles: { fillColor: [248, 250, 252] }, // slate-50
+      styles: { fontSize: 9, cellPadding: 4 },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        3: { halign: 'right' },
+        5: { halign: 'right' }
+      }
+    });
+    
+    doc.save(`Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
   return (
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -111,13 +153,24 @@ export default function Ingredients() {
           <h2 className="text-3xl font-black text-slate-900 tracking-tight">Database Bahan Baku</h2>
           <p className="text-slate-500 font-medium mt-1">Master data semua komponen bahan baku dan kemasan.</p>
         </div>
-        <button
-          onClick={() => { setIsAdding(true); setEditingId(null); reset(); }}
-          className="btn btn-primary shadow-emerald-200"
-        >
-          <Plus size={20} />
-          <span>Tambah Item Baru</span>
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={generatePDF}
+            className="btn btn-secondary shadow-slate-100"
+            aria-label="Simpan ke PDF"
+            title="Simpan ke PDF"
+          >
+            <FileText size={20} />
+            <span className="hidden sm:inline">Save PDF</span>
+          </button>
+          <button
+            onClick={() => { setIsAdding(true); setEditingId(null); reset(); }}
+            className="btn btn-primary shadow-emerald-200"
+          >
+            <Plus size={20} />
+            <span>Tambah Item Baru</span>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>

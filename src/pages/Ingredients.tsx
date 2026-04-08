@@ -127,7 +127,7 @@ export default function Ingredients() {
             className="bg-rose-50 border border-rose-100 text-rose-600 px-6 py-4 rounded-2xl flex justify-between items-center shadow-sm shadow-rose-100"
           >
             <p className="text-sm font-bold uppercase tracking-wider">{error}</p>
-            <button onClick={() => setError(null)} className="p-1 hover:bg-rose-100 rounded-lg transition-colors"><X size={18} /></button>
+            <button onClick={() => setError(null)} aria-label="Tutup" title="Tutup" className="p-1 hover:bg-rose-100 rounded-lg transition-colors"><X size={18} /></button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -148,6 +148,8 @@ export default function Ingredients() {
             <select 
               value={filterCategory} 
               onChange={(e) => setFilterCategory(e.target.value as any)}
+              aria-label="Filter kategori"
+              title="Filter kategori"
               className="bg-slate-50 border-none rounded-xl px-4 py-2 text-xs font-bold text-slate-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
             >
                 <option value="all">Semua Kategori</option>
@@ -163,7 +165,7 @@ export default function Ingredients() {
           <div className="glass-modal w-full max-w-2xl p-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-black text-slate-900">{editingId ? 'Edit Item Bahan' : 'Item Bahan Baru'}</h3>
-              <button onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-slate-600 transition-colors"><X size={24} /></button>
+              <button onClick={() => setIsAdding(false)} aria-label="Tutup modal" title="Tutup modal" className="text-slate-400 hover:text-slate-600 transition-colors"><X size={24} /></button>
             </div>
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -254,8 +256,8 @@ export default function Ingredients() {
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-2">
-                        <button onClick={() => startEdit(ing)} className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"><Edit2 size={18} /></button>
-                        <button onClick={() => handleDelete(ing.id!)} className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"><Trash2 size={18} /></button>
+                        <button onClick={() => startEdit(ing)} aria-label="Edit item" title="Edit item" className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"><Edit2 size={18} /></button>
+                        <button onClick={() => handleDelete(ing.id!)} aria-label="Hapus item" title="Hapus item" className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"><Trash2 size={18} /></button>
                       </div>
                     </td>
                   </tr>

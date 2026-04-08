@@ -4,13 +4,11 @@ import Ingredients from './pages/Ingredients';
 import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import Employees from './pages/Employees';
-import ReloadPrompt from './components/ReloadPrompt';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Layout>
-        <ReloadPrompt />
         <Routes>
           <Route path="/" element={<Navigate to="/recipes" replace />} />
           <Route path="/ingredients" element={<Ingredients />} />

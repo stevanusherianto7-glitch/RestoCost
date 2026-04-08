@@ -1,40 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  --color-primary: #10b981;
+  --color-primary-dark: #059669;
+  --color-secondary: #f8fafc;
+  --color-accent: #f0fdf4;
+  --color-dark: #0f172a;
+  --color-gray-soft: #f1f5f9;
+  
+  --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 
-@layer base {
-  body {
-    @apply bg-gray-50 text-gray-900 font-sans;
-  }
+body {
+  @apply bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900;
+}
+
+.glass-card {
+  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-glass rounded-2xl;
+}
+
+.glass-modal {
+  @apply bg-white/95 backdrop-blur-lg border border-slate-200/50 shadow-2xl rounded-3xl;
 }
 
 .btn {
-  @apply px-6 py-2.5 rounded-xl font-bold transition-all active:translate-y-[2px] flex items-center justify-center gap-2 text-sm;
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
 }
-.btn-sm {
-  @apply px-4 py-2 rounded-lg font-bold transition-all active:translate-y-[2px] flex items-center justify-center gap-2 text-xs;
-}
-.btn-xs {
-  @apply px-2 py-1 rounded-md font-medium transition-all flex items-center justify-center gap-1 text-[10px];
-}
+
 .btn-primary {
-  @apply px-6 py-2.5 rounded-xl font-bold transition-all active:translate-y-[2px] flex items-center justify-center gap-2 text-sm bg-emerald-600 text-white hover:bg-emerald-500 shadow-[0_4px_0_rgb(5,150,105)] active:shadow-[0_2px_0_rgb(5,150,105)];
+  @apply bg-emerald-600 text-white shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:shadow-emerald-300 hover:-translate-y-0.5;
 }
+
 .btn-secondary {
-  @apply px-6 py-2.5 rounded-xl font-bold transition-all active:translate-y-[2px] flex items-center justify-center gap-2 text-sm bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-emerald-600 hover:border-emerald-200 shadow-[0_4px_0_rgb(229,231,235)] active:shadow-[0_2px_0_rgb(229,231,235)];
+  @apply bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900;
 }
+
 .btn-danger {
-  @apply px-6 py-2.5 rounded-xl font-bold transition-all active:translate-y-[2px] flex items-center justify-center gap-2 text-sm bg-red-50 text-red-600 hover:bg-red-100 border border-red-200;
+  @apply bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 hover:text-rose-700 hover:border-rose-200;
 }
-.btn-ghost {
-  @apply p-2 rounded-full hover:bg-gray-100 transition-colors;
-}
+
 .btn-icon {
-  @apply p-2 rounded-full hover:bg-gray-100 transition-colors;
+  @apply p-2 rounded-lg transition-colors duration-200 flex items-center justify-center;
+}
+
+.input-premium {
+  @apply block w-full rounded-xl border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 hover:border-slate-300 placeholder:text-slate-400;
+}
+
+.label-premium {
+  @apply block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1;
+}
+
+.card-premium {
+  @apply bg-white p-6 rounded-2xl shadow-premium border border-slate-100;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }

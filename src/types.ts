@@ -43,5 +43,15 @@ export interface Recipe {
   selling_price: number;
   tax_percentage: number;
   service_percentage: number;
+  labor_cost_type: 'manual' | 'staff';
+  target_portions: number;
   items: RecipeItem[];
+}
+
+export interface Employee {
+  id: number;
+  name: string;
+  position: string;
+  salary: number;
+  created_at?: string;
 }

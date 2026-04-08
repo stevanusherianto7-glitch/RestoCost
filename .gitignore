@@ -3,6 +3,12 @@ build/
 dist/
 coverage/
 .DS_Store
-*.log
+.log
 .env*
 !.env.example
+restocost.db
+android/app/build/
+dist/
+node_modules/
+build_debug.log
+build.log

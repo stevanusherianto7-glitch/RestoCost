@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Plus, Trash2, Edit2, Save, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { Plus, Trash2, Edit2, Save, X, Search, Filter, Database } from 'lucide-react';
 import { Ingredient } from '../types';
+import { DataService } from '../services/dataService';
 import ConfirmModal from '../components/ConfirmModal';
 
 const schema = z.object({
@@ -18,67 +21,48 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const CATEGORY_LABELS: Record<string, string> = {
-  perishable: 'Bahan Segar (Perishables)',
-  dry_goods: 'Bahan Kering & Bahan Pokok (Dry Goods & Staples)',
-  condiment: 'Bumbu, Saus, & Bahan Pelengkap (Condiments & Pantry)',
-  processed: 'Bahan Olahan & Setengah Jadi (Processed & Semi-Finished)',
-  supplies: 'Bahan Penolong (Supplies & Non-Food)',
+  perishable: 'Bahan Segar',
+  dry_goods: 'Bahan Pokok',
+  condiment: 'Bumbu & Saus',
+  processed: 'Bahan Olahan',
+  supplies: 'Kemasan & Lainnya',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  perishable: 'bg-red-100 text-red-800',
-  dry_goods: 'bg-amber-100 text-amber-800',
-  condiment: 'bg-orange-100 text-orange-800',
-  processed: 'bg-blue-100 text-blue-800',
-  supplies: 'bg-purple-100 text-purple-800',
+  perishable: 'bg-rose-50 text-rose-600 border-rose-100',
+  dry_goods: 'bg-amber-50 text-amber-600 border-amber-100',
+  condiment: 'bg-orange-50 text-orange-600 border-orange-100',
+  processed: 'bg-blue-50 text-blue-600 border-blue-100',
+  supplies: 'bg-slate-50 text-slate-600 border-slate-100',
 };
 
 export default function Ingredients() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [filterCategory, setFilterCategory] = useState<'all' | 'perishable' | 'dry_goods' | 'condiment' | 'processed' | 'supplies'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [ingToDelete, setIngToDelete] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Correct Dexie live query
+  const ingredients = useLiveQuery(() => DataService.getIngredients()) || [];
+
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      category: 'perishable'
-    }
+    defaultValues: { category: 'perishable' }
   });
 
-  useEffect(() => {
-    fetchIngredients();
-  }, []);
-
-  const fetchIngredients = async () => {
-    const res = await fetch('/api/ingredients');
-    const data = await res.json();
-    setIngredients(data);
-  };
-
   const onSubmit = async (data: FormData) => {
-    if (editingId) {
-      await fetch(`/api/ingredients/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+    try {
+      await DataService.saveIngredient({ ...data, id: editingId || undefined });
       setEditingId(null);
-    } else {
-      await fetch('/api/ingredients', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
       setIsAdding(false);
+      reset({ category: 'perishable' });
+    } catch (err: any) {
+      setError(err.message || 'Gagal menyimpan data.');
+      setTimeout(() => setError(null), 5000);
     }
-    reset({ category: 'perishable' });
-    fetchIngredients();
   };
 
   const handleDelete = (id: number) => {
@@ -88,31 +72,28 @@ export default function Ingredients() {
 
   const confirmDelete = async () => {
     if (ingToDelete === null) return;
-    const res = await fetch(`/api/ingredients/${ingToDelete}`, { method: 'DELETE' });
-    if (res.ok) {
-      fetchIngredients();
-    } else {
-      setError('Gagal menghapus. Bahan mungkin sedang digunakan dalam resep.');
+    try {
+      await DataService.deleteIngredient(ingToDelete);
+    } catch (err: any) {
+      setError(err.message || 'Gagal menghapus. Bahan mungkin sedang digunakan.');
       setTimeout(() => setError(null), 5000);
+    } finally {
+      setIngToDelete(null);
+      setIsDeleteModalOpen(false);
     }
-    setIngToDelete(null);
   };
 
   const startEdit = (ingredient: Ingredient) => {
     setEditingId(ingredient.id);
-    setValue('name', ingredient.name);
-    setValue('category', ingredient.category || 'perishable');
-    setValue('buy_price', ingredient.buy_price);
-    setValue('buy_unit', ingredient.buy_unit);
-    setValue('conversion_qty', ingredient.conversion_qty);
-    setValue('usage_unit', ingredient.usage_unit);
-    setIsAdding(false);
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setIsAdding(false);
-    reset({ category: 'perishable' });
+    reset({
+      name: ingredient.name,
+      category: ingredient.category || 'perishable',
+      buy_price: ingredient.buy_price,
+      buy_unit: ingredient.buy_unit,
+      conversion_qty: ingredient.conversion_qty,
+      usage_unit: ingredient.usage_unit,
+    });
+    setIsAdding(true);
   };
 
   const filteredIngredients = ingredients.filter(ing => {
@@ -122,164 +103,184 @@ export default function Ingredients() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">Database Bahan Baku & Kemasan</h2>
-        <div className="flex gap-3">
-          <button
-            onClick={() => { setIsAdding(true); setEditingId(null); reset({ category: 'perishable' }); }}
-            className="btn btn-primary"
-          >
-            <Plus size={20} /> Tambah Item
-          </button>
-          {(isAdding || editingId) && (
-            <button
-              onClick={() => handleSubmit(onSubmit)()}
-              className="btn btn-primary"
-            >
-              <Save size={20} /> Simpan
-            </button>
-          )}
+    <div className="space-y-8 pb-20">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Database Bahan</h2>
+          <p className="text-slate-500 font-medium mt-1">Master data semua komponen bahan baku dan kemasan.</p>
         </div>
+        <button
+          onClick={() => { setIsAdding(true); setEditingId(null); reset(); }}
+          className="btn btn-primary shadow-emerald-200"
+        >
+          <Plus size={20} />
+          <span>Tambah Item Baru</span>
+        </button>
       </div>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex justify-between items-center">
-          <p className="text-sm font-medium">{error}</p>
-          <button onClick={() => setError(null)}><X size={16} /></button>
-        </div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-rose-50 border border-rose-100 text-rose-600 px-6 py-4 rounded-2xl flex justify-between items-center shadow-sm shadow-rose-100"
+          >
+            <p className="text-sm font-bold uppercase tracking-wider">{error}</p>
+            <button onClick={() => setError(null)} className="p-1 hover:bg-rose-100 rounded-lg transition-colors"><X size={18} /></button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <div className="flex-1">
+      <div className="card-premium !p-4 flex flex-col md:flex-row gap-4">
+        <div className="flex-1 relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
           <input
             type="text"
-            placeholder="Cari bahan..."
+            placeholder="Cari item bahan baku..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border-gray-300 border p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full bg-slate-50 border-none rounded-xl pl-12 pr-4 py-3 text-sm font-medium focus:ring-2 focus:ring-emerald-500/20 focus:bg-white transition-all outline-none"
           />
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setFilterCategory('all')}
-            className={`btn-sm ${filterCategory === 'all' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-          >
-            Semua
-          </button>
-          {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setFilterCategory(key as any)}
-              className={`btn-sm ${filterCategory === key ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+        <div className="flex flex-wrap gap-2 items-center">
+            <Filter size={16} className="text-slate-400 mr-1" />
+            <select 
+              value={filterCategory} 
+              onChange={(e) => setFilterCategory(e.target.value as any)}
+              className="bg-slate-50 border-none rounded-xl px-4 py-2 text-xs font-bold text-slate-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
             >
-              {label.split(' (')[0]}
-            </button>
-          ))}
+                <option value="all">Semua Kategori</option>
+                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                ))}
+            </select>
         </div>
       </div>
 
-      {(isAdding || editingId) && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
-            <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Nama Item</label>
-              <input {...register('name')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border" placeholder="Contoh: Beras / Box Takeaway" />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+      {isAdding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+          <div className="glass-modal w-full max-w-2xl p-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-xl font-black text-slate-900">{editingId ? 'Edit Item Bahan' : 'Item Bahan Baru'}</h3>
+              <button onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-slate-600 transition-colors"><X size={24} /></button>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Kategori</label>
-              <select {...register('category')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border">
-                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Harga Beli (Rp)</label>
-              <input type="number" {...register('buy_price', { valueAsNumber: true })} value={Number.isNaN(watch('buy_price')) ? '' : (watch('buy_price') ?? '')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border" placeholder="50000" />
-              {errors.buy_price && <p className="text-red-500 text-xs mt-1">{errors.buy_price.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Satuan Beli</label>
-              <input {...register('buy_unit')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border" placeholder="Karung/Pack" />
-              {errors.buy_unit && <p className="text-red-500 text-xs mt-1">{errors.buy_unit.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Isi per Satuan</label>
-              <input type="number" step="any" {...register('conversion_qty', { valueAsNumber: true })} value={Number.isNaN(watch('conversion_qty')) ? '' : (watch('conversion_qty') ?? '')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border" placeholder="10" />
-              {errors.conversion_qty && <p className="text-red-500 text-xs mt-1">{errors.conversion_qty.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Satuan Pakai</label>
-              <input {...register('usage_unit')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2 border" placeholder="kg/liter/pcs" />
-              {errors.usage_unit && <p className="text-red-500 text-xs mt-1">{errors.usage_unit.message}</p>}
-            </div>
+            
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2 space-y-1.5">
+                  <label className="label-premium">Nama Item</label>
+                  <input {...register('name')} className="input-premium py-4" placeholder="Contoh: Daging Sapi Wagyu MB5" />
+                  {errors.name && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest mt-1.5 ml-1">{errors.name.message}</p>}
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="label-premium">Kategori</label>
+                  <select {...register('category')} className="input-premium py-4 appearance-none">
+                    {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="label-premium">Harga Beli (Rp)</label>
+                  <input type="number" {...register('buy_price', { valueAsNumber: true })} className="input-premium py-4" placeholder="0" />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="label-premium">Satuan Beli</label>
+                  <input {...register('buy_unit')} className="input-premium py-4" placeholder="Contoh: Pack, Karung, Jerigen" />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="label-premium">Konversi (Isi per Satuan)</label>
+                  <input type="number" step="any" {...register('conversion_qty', { valueAsNumber: true })} className="input-premium py-4" placeholder="10" />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="label-premium">Satuan Pakai (Usage)</label>
+                  <input {...register('usage_unit')} className="input-premium py-4" placeholder="Contoh: gram, ml, pcs" />
+                </div>
+              </div>
+              
+              <div className="flex gap-4 pt-4">
+                <button type="submit" className="btn btn-primary flex-1 py-4">
+                  <Save size={20} />
+                  <span>{editingId ? 'Simpan Perubahan' : 'Tambahkan Ke Database'}</span>
+                </button>
+                <button type="button" onClick={() => setIsAdding(false)} className="btn btn-secondary px-8">Batal</button>
+              </div>
+            </form>
           </div>
-          <div className="flex justify-end gap-3">
-            <button type="button" onClick={cancelEdit} className="btn btn-secondary">Batal</button>
-            <button type="submit" className="btn btn-primary">
-              <Save size={18} /> Simpan
-            </button>
-          </div>
-        </form>
+        </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Item</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Beli</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Konversi</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga / Unit Pakai</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredIngredients.map((ing) => {
-              const pricePerUnit = ing.buy_price / ing.conversion_qty;
-              return (
-                <tr key={ing.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{ing.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${CATEGORY_COLORS[ing.category] || 'bg-gray-100 text-gray-800'}`}>
-                      {CATEGORY_LABELS[ing.category] || ing.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    Rp {ing.buy_price.toLocaleString('id-ID')} / {ing.buy_unit}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    1 {ing.buy_unit} = {ing.conversion_qty} {ing.usage_unit}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-emerald-600 font-medium">
-                    Rp {pricePerUnit.toLocaleString('id-ID', { maximumFractionDigits: 2 })} / {ing.usage_unit}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onClick={() => startEdit(ing)} className="btn-icon text-indigo-600 hover:text-indigo-900 mr-4"><Edit2 size={18} /></button>
-                    <button onClick={() => handleDelete(ing.id)} className="btn-icon text-red-600 hover:text-red-900"><Trash2 size={18} /></button>
+      <div className="card-premium !p-0 overflow-hidden shadow-2xl shadow-slate-200/50">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-100">
+            <thead className="bg-slate-50/50">
+              <tr>
+                <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Item / Bahan</th>
+                <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Kategori</th>
+                <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Harga Dasar Beli</th>
+                <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Pricing per Unit</th>
+                <th className="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Aksi</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-50">
+              {filteredIngredients.map((ing) => {
+                const pricePerUnit = ing.buy_price / (ing.conversion_qty || 1);
+                return (
+                  <tr key={ing.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-8 py-6 whitespace-nowrap">
+                      <div className="font-black text-slate-800 group-hover:text-emerald-600 transition-colors">{ing.name}</div>
+                      <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1.5 opacity-60">ID: #{ing.id?.toString().padStart(4, '0')}</div>
+                    </td>
+                    <td className="px-8 py-6 whitespace-nowrap">
+                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[ing.category] || 'bg-slate-50 text-slate-400'}`}>
+                        {CATEGORY_LABELS[ing.category] || ing.category}
+                      </span>
+                    </td>
+                    <td className="px-8 py-6 whitespace-nowrap">
+                      <div className="text-sm font-bold text-slate-600">Rp {ing.buy_price.toLocaleString('id-ID')}</div>
+                      <div className="text-[10px] text-slate-400 font-medium">Per {ing.buy_unit}</div>
+                    </td>
+                    <td className="px-8 py-6 whitespace-nowrap">
+                      <div className="text-base font-black text-emerald-600 select-all">
+                        Rp {pricePerUnit.toLocaleString('id-ID', { maximumFractionDigits: 2 })}
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Netto 1 {ing.usage_unit}</div>
+                    </td>
+                    <td className="px-8 py-6 whitespace-nowrap text-right">
+                      <div className="flex justify-end gap-2">
+                        <button onClick={() => startEdit(ing)} className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"><Edit2 size={18} /></button>
+                        <button onClick={() => handleDelete(ing.id!)} className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"><Trash2 size={18} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filteredIngredients.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-8 py-24 text-center">
+                    <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Database size={32} className="text-slate-300" />
+                    </div>
+                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Data tidak ditemukan</p>
                   </td>
                 </tr>
-              );
-            })}
-            {filteredIngredients.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  Tidak ada data yang ditemukan.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDelete}
-        title="Hapus Bahan Baku"
-        message="Apakah Anda yakin ingin menghapus bahan ini? Tindakan ini tidak dapat dibatalkan."
+        title="Hapus Dari Database"
+        message="Anda akan menghapus item ini dari master data. Item yang sedang digunakan di resep mungkin akan menyebabkan error."
       />
     </div>
   );

@@ -7,6 +7,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { Plus, Trash2, Edit2, Save, X, Search, Filter, Database, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Capacitor } from '@capacitor/core';
 import { Ingredient } from '../types';
 import { DataService } from '../services/dataService';
 import ConfirmModal from '../components/ConfirmModal';
@@ -108,6 +109,15 @@ export default function Ingredients() {
 
   const generatePDF = () => {
     const doc = new jsPDF();
+    const fileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`;
+    
+    // Add Metadata to help browsers/OS identify the file
+    doc.setProperties({
+      title: "Database Bahan Baku",
+      subject: "Inventory Report",
+      author: "RestoCost",
+      creator: "RestoCost App"
+    });
     
     // Add Header
     doc.setFontSize(22);
@@ -143,7 +153,9 @@ export default function Ingredients() {
       }
     });
     
-    doc.save(`Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}.pdf`);
+    // Use doc.save with a simpler string to improve compatibility
+    const finalFileName = fileName.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".pdf";
+    doc.save(finalFileName);
   };
 
   return (

@@ -12,3 +12,4 @@ dist/
 node_modules/
 build_debug.log
 build.log
+.idea/

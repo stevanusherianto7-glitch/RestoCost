@@ -78,23 +78,78 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
           </div>
         </div>
 
-        <div className="space-y-8">
-          <div className="space-y-3">
-            <label className="label-premium flex justify-between items-center">
-              <span>Total Biaya Overhead</span>
-              <span className="text-[10px] text-amber-500 font-black tracking-widest uppercase bg-amber-50 px-2 py-0.5 rounded-lg">Per Batch</span>
-            </label>
-            <div className="relative group">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">Rp</span>
-              <input
-                type="number"
-                value={recipe.overhead_cost}
-                onChange={(e) => onUpdateRecipe({ overhead_cost: parseFloat(e.target.value) || 0 })}
-                className="input-premium py-5 pl-12 text-xl font-black text-slate-900 group-hover:bg-slate-50/50 transition-colors"
-                placeholder="0"
-              />
+        <div className="space-y-6">
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Pengeluaran Bulanan</p>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-500">Listrik, Air & Gas</label>
+                <input 
+                  type="number" 
+                  value={recipe.overhead_electricity || 0}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    const totalMonthly = val + (recipe.overhead_rent || 0) + (recipe.overhead_internet || 0);
+                    const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
+                    onUpdateRecipe({ overhead_electricity: val, overhead_cost: perPortion });
+                  }}
+                  className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-500">Sewa Tempat</label>
+                <input 
+                  type="number" 
+                  value={recipe.overhead_rent || 0}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    const totalMonthly = val + (recipe.overhead_electricity || 0) + (recipe.overhead_internet || 0);
+                    const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
+                    onUpdateRecipe({ overhead_rent: val, overhead_cost: perPortion });
+                  }}
+                  className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-500">Internet & Lainnya</label>
+                <input 
+                  type="number" 
+                  value={recipe.overhead_internet || 0}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    const totalMonthly = val + (recipe.overhead_electricity || 0) + (recipe.overhead_rent || 0);
+                    const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
+                    onUpdateRecipe({ overhead_internet: val, overhead_cost: perPortion });
+                  }}
+                  className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-500">Target Porsi / Bulan</label>
+                <input 
+                  type="number" 
+                  value={recipe.target_portions || 1}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 1;
+                    const totalMonthly = (recipe.overhead_electricity || 0) + (recipe.overhead_rent || 0) + (recipe.overhead_internet || 0);
+                    const perPortion = totalMonthly / val;
+                    onUpdateRecipe({ target_portions: val, overhead_cost: perPortion });
+                  }}
+                  className="w-full bg-emerald-50 text-emerald-700 border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-emerald-500/20" 
+                />
+              </div>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium italic mt-2 ml-1">Tips: Meliputi listrik, air, gas, sewa, dan penyusutan peralatan.</p>
+          </div>
+
+          <div className="p-6 bg-amber-50/50 rounded-3xl border border-amber-100 flex justify-between items-center">
+            <div>
+              <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Alokasi Per Batch</p>
+              <p className="text-2xl font-black text-slate-900 mt-1">Rp {recipe.overhead_cost.toLocaleString('id-ID')}</p>
+            </div>
+            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-amber-500 shadow-sm shadow-amber-200/50">
+              <Zap size={24} />
+            </div>
           </div>
         </div>
       </div>

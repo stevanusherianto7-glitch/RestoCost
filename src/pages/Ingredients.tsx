@@ -106,7 +106,7 @@ export default function Ingredients() {
     <div className="space-y-8 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Database Bahan</h2>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Database Bahan Baku</h2>
           <p className="text-slate-500 font-medium mt-1">Master data semua komponen bahan baku dan kemasan.</p>
         </div>
         <button

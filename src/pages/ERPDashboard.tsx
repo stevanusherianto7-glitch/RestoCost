@@ -4,23 +4,19 @@ import {
   TrendingUp, 
   AlertTriangle, 
   Package, 
-  RefreshCcw, 
   DollarSign, 
   Search,
-  ShoppingCart,
-  Plus
+  ShoppingCart
 } from 'lucide-react';
 import { ERPService } from '../services/erpService';
 import { DataService } from '../services/dataService';
-import { Ingredient, Recipe, Sale } from '../types';
-import clsx from 'clsx';
+import { Ingredient, Recipe } from '../types';
 
 export default function ERPDashboard() {
   const [command, setCommand] = useState('');
   const [lowStock, setLowStock] = useState<Ingredient[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [plData, setPlData] = useState<{ revenue: number; hpp: number; grossProfit: number; salesCount: number } | null>(null);
-  const [logs, setLogs] = useState<{ type: 'info' | 'success' | 'warning' | 'error'; message: string; time: string }[]>([]);
   const [showSalesModal, setShowSalesModal] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<number | ''>('');
   const [saleQty, setSaleQty] = useState<number>(1);
@@ -37,7 +33,6 @@ export default function ERPDashboard() {
       const allRecipes = await DataService.getRecipes();
       setRecipes(allRecipes);
       
-      // Calculate P/L for today
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const tomorrow = new Date(today);
@@ -46,12 +41,8 @@ export default function ERPDashboard() {
       const pl = await ERPService.calculateProfitLoss(today, tomorrow);
       setPlData(pl);
     } catch (err) {
-      addLog('error', 'Gagal memuat data dashboard.');
+      console.error('Gagal memuat data dashboard.', err);
     }
-  };
-
-  const addLog = (type: 'info' | 'success' | 'warning' | 'error', message: string) => {
-    setLogs(prev => [{ type, message, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 20));
   };
 
   const handleCommand = async (e: React.FormEvent) => {
@@ -61,15 +52,10 @@ export default function ERPDashboard() {
 
     if (cmd === '[SALES_SYNC]') {
       setShowSalesModal(true);
-      addLog('info', 'Membuka Sales Sync Engine...');
     } else if (cmd === '[STOCK_CHECK]') {
       await loadDashboardData();
-      addLog('warning', `Ditemukan ${lowStock.length} bahan baku di bawah Safety Stock.`);
     } else if (cmd === '[PROFIT_LOSS]') {
       await loadDashboardData();
-      addLog('success', `Profit harian berhasil diperbarui.`);
-    } else {
-      addLog('error', `Perintah '${cmd}' tidak dikenali. Gunakan [SALES_SYNC], [STOCK_CHECK], atau [PROFIT_LOSS].`);
     }
   };
 
@@ -78,14 +64,12 @@ export default function ERPDashboard() {
     setIsProcessing(true);
     try {
       await ERPService.processSale(Number(selectedRecipe), saleQty);
-      const recipe = recipes.find(r => r.id === Number(selectedRecipe));
-      addLog('success', `Berhasil menjual ${saleQty} ${recipe?.name}. Stok gudang telah dipotong.`);
       setShowSalesModal(false);
       setSelectedRecipe('');
       setSaleQty(1);
       await loadDashboardData();
     } catch (err: any) {
-      addLog('error', `Gagal memproses penjualan: ${err.message}`);
+      console.error('Gagal memproses penjualan:', err.message);
     } finally {
       setIsProcessing(false);
     }
@@ -169,68 +153,32 @@ export default function ERPDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Logs Section */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <RefreshCcw className="w-5 h-5 text-emerald-600" />
-              Engine Event Logs
-            </h2>
-            <button onClick={() => setLogs([])} className="text-sm text-slate-400 hover:text-slate-600 transition-colors">Clear Console</button>
-          </div>
-          <div className="bg-slate-900 rounded-3xl p-6 h-[400px] overflow-y-auto font-mono text-sm border border-slate-800 shadow-2xl">
-            {logs.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-600 space-y-2 opacity-50">
-                 <Terminal size={48} />
-                 <p>Menunggu aktivitas engine...</p>
+      {/* Critical Alerts - Full Width */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <AlertTriangle className="w-5 h-5 text-amber-500" />
+          Critical Alerts
+        </h2>
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 space-y-3 max-h-[400px] overflow-y-auto">
+          {lowStock.length === 0 ? (
+             <div className="py-12 text-center text-slate-400">
+                <Package className="mx-auto mb-2 opacity-20" size={40} />
+                <p>Semua stok aman.</p>
+             </div>
+          ) : (
+            lowStock.map(ing => (
+              <div key={ing.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                <div>
+                  <p className="font-bold text-slate-900">{ing.name}</p>
+                  <p className="text-xs text-rose-600 font-medium">Sisa: {ing.current_stock} {ing.buy_unit}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Safety</p>
+                  <p className="font-bold text-slate-700">{ing.safety_stock} {ing.buy_unit}</p>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {logs.map((log, i) => (
-                  <div key={i} className={clsx(
-                    "flex gap-3 border-l-2 pl-3 py-1",
-                    log.type === 'error' ? "border-rose-500 text-rose-400" :
-                    log.type === 'warning' ? "border-amber-500 text-amber-400" :
-                    log.type === 'success' ? "border-emerald-500 text-emerald-400" :
-                    "border-slate-500 text-slate-400"
-                  )}>
-                    <span className="opacity-40 select-none">[{log.time}]</span>
-                    <span>{log.message}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Low Stock Detailed View */}
-        <div className="space-y-4">
-           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-amber-500" />
-              Critical Alerts
-            </h2>
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-4 space-y-3 max-h-[400px] overflow-y-auto">
-              {lowStock.length === 0 ? (
-                 <div className="py-12 text-center text-slate-400">
-                    <Package className="mx-auto mb-2 opacity-20" size={40} />
-                    <p>Semua stok aman.</p>
-                 </div>
-              ) : (
-                lowStock.map(ing => (
-                  <div key={ing.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-slate-900">{ing.name}</p>
-                      <p className="text-xs text-rose-600 font-medium">Sisa: {ing.current_stock} {ing.buy_unit}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Safety</p>
-                      <p className="font-bold text-slate-700">{ing.safety_stock} {ing.buy_unit}</p>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+            ))
+          )}
         </div>
       </div>
 

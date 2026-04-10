@@ -33,18 +33,31 @@ const RecipeItemRow: React.FC<RecipeItemRowProps> = ({
         </select>
       </div>
 
-      <div className="md:col-span-3 space-y-1.5">
-        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
-          Jumlah ({selectedIngredient?.usage_unit || '...'})
+      <div className="md:col-span-3">
+        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-1.5 block">
+          Takaran & Satuan Unit
         </label>
-        <input
-          type="number"
-          step="any"
-          value={item.amount}
-          onChange={(e) => onUpdate({ amount: parseFloat(e.target.value) || 0 })}
-          className="input-premium py-3 text-sm font-bold bg-slate-50 border-none group-hover/row:bg-white"
-          placeholder="0.00"
-        />
+        <div className="flex gap-2">
+          <input
+            type="number"
+            step="any"
+            value={item.amount}
+            onChange={(e) => onUpdate({ amount: parseFloat(e.target.value) || 0 })}
+            className="input-premium py-3 text-sm font-bold bg-slate-50 border-none group-hover/row:bg-white w-full"
+            placeholder="0.00"
+          />
+          <select 
+            disabled 
+            value={selectedIngredient?.usage_unit || ''}
+            className="input-premium py-3 px-2 text-sm font-bold bg-slate-100 border-none text-slate-500 cursor-not-allowed w-28 text-center appearance-none"
+            title="Satuan unit (diambil dari Master Bahan Baku)"
+          >
+            <option value="">Unit</option>
+            {selectedIngredient?.usage_unit && (
+              <option value={selectedIngredient.usage_unit}>{selectedIngredient.usage_unit}</option>
+            )}
+          </select>
+        </div>
       </div>
 
       <div className="md:col-span-3 space-y-1.5">

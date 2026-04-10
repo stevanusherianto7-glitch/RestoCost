@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="p-6">
           <h1 className="text-2xl font-bold text-emerald-700 flex items-center gap-2">
             <LayoutDashboard className="w-8 h-8" />
-            RestoCost
+            PSRestoCost
           </h1>
         </div>
         <nav className="p-4 space-y-2">
@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <div className="md:hidden fixed top-0 w-full bg-white border-b border-gray-200 z-10 p-4 flex items-center justify-between">
          <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
             <LayoutDashboard className="w-6 h-6" />
-            RestoCost
+            PSRestoCost
           </h1>
           {/* Simple mobile nav could go here, for now just links */}
           <div className="flex gap-4">

@@ -257,8 +257,6 @@ export default function RecipeDetail() {
           <button 
             onClick={() => navigate('/recipes')} 
             className="p-3 bg-white hover:bg-slate-50 border border-slate-100 rounded-2xl text-slate-400 hover:text-slate-900 transition-all shadow-sm group"
-            aria-label="Kembali ke daftar resep"
-            title="Kembali ke daftar resep"
           >
             <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
           </button>

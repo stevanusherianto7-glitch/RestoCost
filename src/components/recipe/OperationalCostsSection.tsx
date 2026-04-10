@@ -52,7 +52,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                <span className="text-[10px] text-blue-500 font-black tracking-widest uppercase bg-blue-50 px-2 py-0.5 rounded-lg">Per Batch</span>
             </label>
             <div className="relative group">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm pointer-events-none">Rp</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">Rp</span>
               <input
                 type="number"
                 value={recipe.labor_cost}

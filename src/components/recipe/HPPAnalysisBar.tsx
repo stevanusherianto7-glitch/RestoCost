@@ -72,12 +72,12 @@ const HPPAnalysisBar: React.FC<HPPAnalysisBarProps> = ({
                    <HandCoins size={12} /> Harga Jual Aktual (Porsi)
                 </label>
                 <div className="relative group">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">Rp</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">Rp</span>
                   <input
                     type="number"
                     value={recipe.selling_price}
                     onChange={(e) => onUpdateRecipe({ selling_price: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-white border-2 border-emerald-100 rounded-2xl py-3 pl-10 pr-4 text-base font-black text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
+                    className="w-full bg-white border-2 border-emerald-100 rounded-2xl py-3 pl-12 pr-4 text-base font-black text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
                     placeholder="0"
                   />
                 </div>

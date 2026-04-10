@@ -187,7 +187,21 @@ export default function RecipeDetail() {
         doc.text(`RestoCost — ${recipe.name} — Hal ${i}/${pageCount}`, 14, doc.internal.pageSize.height - 10);
       }
 
-      doc.save(fileName.replace(/[^a-z0-9_]/gi, '_').toLowerCase() + '.pdf');
+      // ── Save with explicit filename ──
+      const pdfBlob = doc.output('blob');
+      const cleanName = `Resep_${recipe.name}_${new Date().toISOString().split('T')[0]}`
+        .replace(/\s+/g, '_')
+        .replace(/[^a-zA-Z0-9_\-]/g, '')
+        + '.pdf';
+
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = cleanName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error('PDF generation error:', err);
     } finally {

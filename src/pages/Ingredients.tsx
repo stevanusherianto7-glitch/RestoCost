@@ -159,9 +159,21 @@ export default function Ingredients() {
       }
     });
     
-    // Use doc.save with a simpler string to improve compatibility
-    const finalFileName = fileName.replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".pdf";
-    doc.save(finalFileName);
+    // Save with explicit filename via Blob
+    const pdfBlob = doc.output('blob');
+    const finalFileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9_\-]/g, '')
+      + '.pdf';
+
+    const url = URL.createObjectURL(pdfBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = finalFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (

@@ -178,21 +178,22 @@ export default function RecipeDetail() {
       const summaryData = [
         ['Bahan Baku & Kemasan', '', fmtRp(hpp.rawMaterialCost + hpp.packagingCost)],
         [`Waste Buffer (${recipe.buffer_percentage}%)`, '', fmtRp(hpp.bufferCost)],
-        ['TOTAL HPP (COGS)', '', { content: fmtRp(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, '', { content: fmtRp(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
         ['Beban Tenaga Kerja', '', fmtRp(laborCost)],
         ['Beban Overhead', '', fmtRp(overheadCost)],
-        ['TOTAL OPEX', '', { content: fmtRp(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, '', { content: fmtRp(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
         ['', '', ''],
-        ['HARGA JUAL (NETT)', '', { content: fmtRp(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }],
+        [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }, '', { content: fmtRp(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }],
         ['Laba Kotor (Gross Profit)', '', fmtRp(hpp.grossProfit)],
-        ['LABA BERSIH (NET PROFIT)', '', { content: fmtRp(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }],
+        [{ content: 'LABA BERSIH (NET PROFIT)', styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }, '', { content: fmtRp(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }],
       ];
 
       autoTable(doc, {
         startY: currentY + 5,
         body: summaryData,
         theme: 'plain',
-        styles: { fontSize: 9, cellPadding: 3 },
+        margin: { left: 14, right: 14 },
+        styles: { fontSize: 9, cellPadding: 3, halign: 'left' },
         columnStyles: {
           0: { cellWidth: 80 },
           1: { cellWidth: 40 },

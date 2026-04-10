@@ -85,7 +85,7 @@ export default function Recipes() {
             <div className="glass-modal w-full max-w-md p-8">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-black text-slate-900">Resep Baru</h3>
-                <button onClick={() => setIsCreating(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <button onClick={() => setIsCreating(false)} aria-label="Tutup" title="Tutup" className="text-slate-400 hover:text-slate-600 transition-colors">
                   <X size={24} />
                 </button>
               </div>
@@ -134,6 +134,8 @@ export default function Recipes() {
                 </div>
                 <button 
                   onClick={() => handleDelete(recipe.id!)} 
+                  aria-label="Hapus resep"
+                  title="Hapus"
                   className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
                 >
                   <Trash2 size={20} />

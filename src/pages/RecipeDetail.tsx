@@ -268,6 +268,8 @@ export default function RecipeDetail() {
         <div className="flex items-center gap-6">
           <button 
             onClick={() => navigate('/recipes')} 
+            aria-label="Kembali ke Daftar Resep"
+            title="Kembali"
             className="p-3 bg-white hover:bg-slate-50 border border-slate-100 rounded-2xl text-slate-400 hover:text-slate-900 transition-all shadow-sm group"
           >
             <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />

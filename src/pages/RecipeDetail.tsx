@@ -68,7 +68,7 @@ export default function RecipeDetail() {
 
     try {
       const hpp = calculateHPP(recipe, ingredients);
-      const doc = new jsPDF();
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [210, 297] });
       const fileName = `Resep_${recipe.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}`;
 
       doc.setProperties({

@@ -114,7 +114,7 @@ export default function Ingredients() {
   });
 
   const generatePDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [210, 297] });
     const fileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`;
     
     // Add Metadata to help browsers/OS identify the file

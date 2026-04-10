@@ -181,6 +181,8 @@ export default function Employees() {
                               setIsModalOpen(true);
                             }}
                             className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all"
+                            title="Edit Data Karyawan"
+                            aria-label="Edit Data Karyawan"
                           >
                             <Edit2 size={18} />
                           </button>
@@ -190,6 +192,8 @@ export default function Employees() {
                               handleDelete(employee.id);
                             }}
                             className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+                            title="Hapus Data Karyawan"
+                            aria-label="Hapus Data Karyawan"
                           >
                             <Trash2 size={18} />
                           </button>
@@ -222,7 +226,12 @@ export default function Employees() {
                 <h3 className="text-2xl font-black text-slate-900 tracking-tight">
                   {editingEmployee ? 'Update Data Staff' : 'Registrasi Karyawan'}
                 </h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  title="Tutup Modal"
+                  aria-label="Tutup Modal"
+                >
                   <X size={24} />
                 </button>
               </div>

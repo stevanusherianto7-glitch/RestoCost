@@ -62,7 +62,7 @@ export default function Recipes() {
     <div className="space-y-10 pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Katalog Resep & BOM</h2>
+          <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-slate-900">Katalog Resep & BOM</h2>
           <p className="text-slate-500 font-medium mt-1">Kelola daftar resep dan analisis harga jual menu Anda.</p>
         </div>
         <button

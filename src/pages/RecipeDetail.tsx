@@ -172,7 +172,6 @@ export default function RecipeDetail() {
       doc.setTextColor(15, 23, 42);
       doc.text('Rincian Biaya & Profitabilitas', 14, currentY);
 
-      const hpp = hppResult; // Using the one already calculated below
       const laborCost = hpp.primeCost - hpp.rawMaterialCost - hpp.packagingCost;
       const overheadCost = hpp.totalOperationalCost - laborCost;
 
@@ -287,7 +286,7 @@ export default function RecipeDetail() {
             <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
           </button>
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">{recipe.name}</h2>
+            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-slate-900">{recipe.name}</h2>
             <div className="flex items-center gap-3 mt-1.5">
                <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest border border-emerald-100 rounded-lg">Draft BOM</span>
                <span className="text-slate-400 text-xs font-medium">Terakhir diupdate: Baru saja (Local)</span>

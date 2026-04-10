@@ -80,7 +80,7 @@ export default function ERPDashboard() {
       {/* Header with Title & Command Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-montserrat font-bold text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-montserrat font-bold text-slate-900 flex items-center gap-3">
             <div className="bg-emerald-100 p-2 rounded-2xl">
               <Terminal className="text-emerald-700 w-8 h-8" />
             </div>

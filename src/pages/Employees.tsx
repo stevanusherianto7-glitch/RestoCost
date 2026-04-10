@@ -75,7 +75,7 @@ export default function Employees() {
     <div className="space-y-10 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Manajemen SDM</h2>
+          <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-slate-900">Manajemen SDM</h2>
           <p className="text-slate-500 font-medium mt-1">Kelola data karyawan dan struktur gaji operasional.</p>
         </div>
         <button

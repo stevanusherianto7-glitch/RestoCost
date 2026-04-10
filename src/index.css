@@ -8,6 +8,8 @@
   --color-dark: #0f172a;
   --color-gray-soft: #f1f5f9;
   
+  --font-montserrat: 'Montserrat', sans-serif;
+  
   --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }

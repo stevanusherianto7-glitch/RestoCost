@@ -80,7 +80,7 @@ export default function ERPDashboard() {
       {/* Header with Title & Command Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-3xl lg:text-4xl font-montserrat font-bold text-slate-900 flex items-center gap-3">
             <div className="bg-emerald-100 p-2 rounded-2xl">
               <Terminal className="text-emerald-700 w-8 h-8" />
             </div>
@@ -187,10 +187,10 @@ export default function ERPDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowSalesModal(false)}></div>
           <div className="glass-modal w-full max-w-md p-8 relative animate-in zoom-in-95 duration-200">
-             <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+             <h1 className="text-3xl lg:text-4xl font-montserrat font-bold text-slate-800 flex items-center gap-3 mb-6">
                 <ShoppingCart className="text-emerald-600" />
                 Sales Sync Engine
-             </h3>
+             </h1>
              <div className="space-y-6">
                 <div>
                    <label htmlFor="recipe-select" className="label-premium">Pilih Menu Terjual</label>

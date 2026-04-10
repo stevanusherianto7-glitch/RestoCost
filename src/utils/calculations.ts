@@ -3,17 +3,19 @@ import { Recipe, Ingredient } from '../types';
 export interface CalculationResult {
   rawMaterialCost: number;
   packagingCost: number;
-  primeCost: number;
   bufferCost: number;
-  totalHPP: number;
+  totalHPP: number; // Pure COGS
+  totalOperationalCost: number; // OPEX (labor + overhead)
+  primeCost: number; // For some businesses, totalHPP + OPEX, we separate it
   grossProfit: number;
-  margin: number;
+  netProfit: number;
+  currentMargin: number; // Gross Margin
+  currentNetMargin: number; // Net Margin 
   foodCostPercentage: number;
   serviceNominal: number;
   taxNominal: number;
   finalCustomerPrice: number;
   recommendedPrice: number;
-  currentMargin: number; // Added for HPPAnalysisBar compatibility
 }
 
 export const calculateHPP = (recipe: Recipe, ingredients: Ingredient[]): CalculationResult => {
@@ -33,35 +35,47 @@ export const calculateHPP = (recipe: Recipe, ingredients: Ingredient[]): Calcula
     }
   });
 
-  const bufferCost = (rawMaterialCost + packagingCost) * (recipe.buffer_percentage / 100);
-  const primeCost = rawMaterialCost + packagingCost + (recipe.labor_cost || 0);
-  const totalHPP = primeCost + (recipe.overhead_cost || 0) + bufferCost;
+  const bufferCost = (rawMaterialCost + packagingCost) * ((recipe.buffer_percentage || 0) / 100);
   
-  const recommendedPrice = recipe.buffer_percentage < 100 
-    ? totalHPP / (1 - (recipe.buffer_percentage / 100))
+  // Total HPP (Cost Of Goods Sold) ONLY includes Raw Materials, Packaging, and Waste Buffer.
+  const totalHPP = rawMaterialCost + packagingCost + bufferCost;
+  
+  // Operational Cost (OPEX)
+  const totalOperationalCost = (recipe.labor_cost || 0) + (recipe.overhead_cost || 0);
+
+  const primeCost = rawMaterialCost + packagingCost + (recipe.labor_cost || 0);
+  
+  // Recommended Price is based ONLY on COGS and Target Margin !!
+  const targetMargin = recipe.target_margin || 65; 
+  const recommendedPrice = targetMargin < 100 
+    ? totalHPP / (1 - (targetMargin / 100))
     : totalHPP * 2;
 
-  const currentMargin = recipe.selling_price > 0 
-    ? ((recipe.selling_price - totalHPP) / recipe.selling_price) * 100
-    : 0;
-
-  const foodCostPercentage = recipe.selling_price > 0
-    ? (totalHPP / recipe.selling_price) * 100
-    : 0;
+  // Actual Margins & Costs based on user's selected Selling Price
+  const sp = recipe.selling_price || 0;
+  
+  const grossProfit = sp - totalHPP;
+  const netProfit = grossProfit - totalOperationalCost;
+  
+  const currentMargin = sp > 0 ? (grossProfit / sp) * 100 : 0;
+  const currentNetMargin = sp > 0 ? (netProfit / sp) * 100 : 0;
+  const foodCostPercentage = sp > 0 ? (totalHPP / sp) * 100 : 0;
 
   return {
     rawMaterialCost,
     packagingCost,
-    primeCost,
     bufferCost,
     totalHPP,
-    recommendedPrice,
+    totalOperationalCost,
+    primeCost,
+    grossProfit,
+    netProfit,
     currentMargin,
+    currentNetMargin,
     foodCostPercentage,
-    grossProfit: (recipe.selling_price || 0) - totalHPP,
-    margin: currentMargin,
-    serviceNominal: (recipe.selling_price || 0) * (recipe.service_percentage || 0) / 100,
-    taxNominal: (recipe.selling_price || 0) * (recipe.tax_percentage || 0) / 100,
-    finalCustomerPrice: (recipe.selling_price || 0) 
+    recommendedPrice,
+    serviceNominal: sp * ((recipe.service_percentage || 0) / 100),
+    taxNominal: sp * ((recipe.tax_percentage || 0) / 100),
+    finalCustomerPrice: sp 
   };
 };

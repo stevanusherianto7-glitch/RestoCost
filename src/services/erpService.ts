@@ -1,6 +1,7 @@
 import { db } from '../db/dexie-db';
 import { Ingredient, Recipe, Sale, Purchase, StockOpname } from '../types';
 import { DataService } from './dataService';
+import { calculateHPP } from '../utils/calculations';
 
 export class ERPService {
   /**
@@ -76,19 +77,15 @@ export class ERPService {
     let totalRevenue = 0;
     let totalHPP = 0;
 
+    const allIngredients = await DataService.getIngredients();
+
     for (const sale of sales) {
       totalRevenue += sale.total_price;
       
-      // Calculate HPP for this recipe at the time of sale
-      // Note: In a real system, we'd store the HPP at the time of sale.
-      // For now, we calculate it dynamically based on CURRENT ingredient prices.
       const recipe = await DataService.getRecipe(sale.recipe_id);
-      const hppPerPortion = recipe.items.reduce((acc, item) => {
-        const cost = (item.amount / (item.conversion_qty || 1)) * (item.buy_price || 0);
-        return acc + cost;
-      }, 0);
+      const hppResult = calculateHPP(recipe, allIngredients);
       
-      totalHPP += hppPerPortion * sale.quantity;
+      totalHPP += hppResult.totalHPP * sale.quantity;
     }
 
     return {

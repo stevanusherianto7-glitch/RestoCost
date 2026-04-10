@@ -41,12 +41,14 @@ export class DataService {
 
   // Recipes
   static async getRecipes(): Promise<Recipe[]> {
-    return await db.recipes.orderBy('name').toArray();
+    const recipes = await db.recipes.orderBy('name').toArray();
+    return recipes.map(r => ({ ...r, target_margin: r.target_margin ?? 65 }));
   }
 
   static async getRecipe(id: number): Promise<Recipe & { items: RecipeItem[] }> {
-    const recipe = await db.recipes.get(id);
-    if (!recipe) throw new Error("Recipe not found");
+    const rawRecipe = await db.recipes.get(id);
+    if (!rawRecipe) throw new Error("Recipe not found");
+    const recipe = { ...rawRecipe, target_margin: rawRecipe.target_margin ?? 65 };
     const items = await db.recipeItems.where('recipe_id').equals(id).toArray();
     
     // Join with ingredient names

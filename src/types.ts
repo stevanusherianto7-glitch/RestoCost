@@ -58,7 +58,8 @@ export interface Recipe {
   id: number;
   name: string;
   image_url?: string;
-  buffer_percentage: number;
+  buffer_percentage: number; // Waste Buffer
+  target_margin: number;     // Target Gross Profit Margin
   labor_cost: number;
   overhead_cost: number;
   overhead_electricity: number;

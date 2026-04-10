@@ -122,15 +122,19 @@ export default function RecipeDetail() {
 
       doc.setFontSize(14);
       doc.setTextColor(15, 23, 42);
-      doc.text('Ringkasan HPP', 14, summaryY);
+      doc.text('Struktur Biaya (Per Porsi)', 14, summaryY);
+
+      const laborCost = hpp.primeCost - hpp.rawMaterialCost - hpp.packagingCost;
+      const overheadCost = hpp.totalOperationalCost - laborCost;
 
       const summaryRows = [
-        ['Biaya Bahan Baku', fmtRp(hpp.rawMaterialCost)],
-        ['Biaya Kemasan', fmtRp(hpp.packagingCost)],
-        ['Biaya Tenaga Kerja', fmtRp(recipe.labor_cost || 0)],
-        ['Overhead per Porsi', fmtRp(recipe.overhead_cost || 0)],
-        ['Buffer / Waste (' + recipe.buffer_percentage + '%)', fmtRp(hpp.bufferCost)],
-        ['TOTAL HPP', fmtRp(hpp.totalHPP)],
+        ['Bahan Baku (HPP)', fmtRp(hpp.rawMaterialCost)],
+        ['Kemasan (HPP)', fmtRp(hpp.packagingCost)],
+        [`Waste Buffer (${recipe.buffer_percentage || 0}%)`, fmtRp(hpp.bufferCost)],
+        ['TOTAL HPP (COGS)', fmtRp(hpp.totalHPP)],
+        ['Biaya Tenaga Kerja (OPEX)', fmtRp(laborCost)],
+        ['Biaya Overhead (OPEX)', fmtRp(overheadCost)],
+        ['TOTAL OPEX', fmtRp(hpp.totalOperationalCost)],
       ];
 
       autoTable(doc, {
@@ -143,11 +147,10 @@ export default function RecipeDetail() {
           1: { halign: 'right' },
         },
         didParseCell: (data: any) => {
-          if (data.row.index === summaryRows.length - 1) {
-            data.cell.styles.fillColor = [16, 185, 129];
-            data.cell.styles.textColor = 255;
+          if (data.row.index === 3 || data.row.index === 6) {
+            data.cell.styles.fillColor = [241, 245, 249];
+            data.cell.styles.textColor = [15, 23, 42];
             data.cell.styles.fontStyle = 'bold';
-            data.cell.styles.fontSize = 12;
           }
         },
       });
@@ -157,14 +160,15 @@ export default function RecipeDetail() {
 
       doc.setFontSize(14);
       doc.setTextColor(15, 23, 42);
-      doc.text('Analisis Harga Jual', 14, pricingY);
+      doc.text('Analisis Harga & Profitabilitas', 14, pricingY);
 
       const pricingRows = [
-        ['Harga Jual', fmtRp(recipe.selling_price || 0)],
-        ['Laba Kotor', fmtRp(hpp.grossProfit)],
-        ['Food Cost %', `${hpp.foodCostPercentage.toFixed(1)}%`],
-        ['Margin', `${hpp.currentMargin.toFixed(1)}%`],
-        ['Harga Rekomendasi', fmtRp(hpp.recommendedPrice)],
+        ['Harga Jual Aktual', fmtRp(recipe.selling_price || 0)],
+        ['Laba Kotor (Gross Profit)', fmtRp(hpp.grossProfit)],
+        ['Laba Bersih (Net Profit)', fmtRp(hpp.netProfit)],
+        ['Food Cost (FC %)', `${hpp.foodCostPercentage.toFixed(1)}%`],
+        ['Margin Laba Kotor', `${hpp.currentMargin.toFixed(1)}%`],
+        [`Harga Rekomendasi (Target: ${recipe.target_margin || 65}%)`, fmtRp(hpp.recommendedPrice)],
       ];
 
       autoTable(doc, {
@@ -176,6 +180,14 @@ export default function RecipeDetail() {
           0: { fontStyle: 'bold', cellWidth: 80 },
           1: { halign: 'right' },
         },
+        didParseCell: (data: any) => {
+          if (data.row.index === 2) {
+             data.cell.styles.textColor = [16, 185, 129];
+          } else if (data.row.index === 5) {
+             data.cell.styles.fillColor = [16, 185, 129];
+             data.cell.styles.textColor = 255;
+          }
+        }
       });
 
       // ── Footer ──

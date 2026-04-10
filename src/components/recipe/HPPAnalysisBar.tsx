@@ -47,13 +47,13 @@ const HPPAnalysisBar: React.FC<HPPAnalysisBarProps> = ({
                   min="5"
                   max="80"
                   step="1"
-                  value={recipe.buffer_percentage}
-                  onChange={(e) => onUpdateRecipe({ buffer_percentage: parseInt(e.target.value) })}
+                  value={recipe.target_margin || 65}
+                  onChange={(e) => onUpdateRecipe({ target_margin: parseInt(e.target.value) })}
                   title="Target Margin (%)"
                   aria-label="Target Margin Percentage"
                   className="w-32 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                 />
-                <span className="text-lg font-black text-slate-900 w-10">{recipe.buffer_percentage}%</span>
+                <span className="text-lg font-black text-slate-900 w-10">{recipe.target_margin || 65}%</span>
               </div>
             </div>
           </div>

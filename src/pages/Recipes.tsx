@@ -27,6 +27,7 @@ export default function Recipes() {
         name: capitalizedName, 
         items: [],
         buffer_percentage: 5,
+        target_margin: 65,
         selling_price: 0,
         target_portions: 1,
         labor_cost_type: 'manual',

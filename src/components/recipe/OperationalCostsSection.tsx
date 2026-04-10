@@ -54,7 +54,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
             <div className="relative group">
               <input
                 type="number"
-                value={recipe.labor_cost}
+                value={recipe.labor_cost || ''}
                 onChange={(e) => onUpdateRecipe({ labor_cost: parseFloat(e.target.value) || 0 })}
                 className="input-premium py-5 px-6 text-xl font-black text-slate-900 group-hover:bg-slate-50/50 transition-colors"
                 placeholder="0"
@@ -86,7 +86,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                 <label className="text-[10px] font-bold text-slate-500">Listrik, Air & Gas</label>
                 <input 
                   type="number" 
-                  value={recipe.overhead_electricity || 0}
+                  value={recipe.overhead_electricity || ''}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     const totalMonthly = val + (recipe.overhead_rent || 0) + (recipe.overhead_internet || 0);
@@ -102,7 +102,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                 <label className="text-[10px] font-bold text-slate-500">Sewa Tempat</label>
                 <input 
                   type="number" 
-                  value={recipe.overhead_rent || 0}
+                  value={recipe.overhead_rent || ''}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     const totalMonthly = val + (recipe.overhead_electricity || 0) + (recipe.overhead_internet || 0);
@@ -118,7 +118,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                 <label className="text-[10px] font-bold text-slate-500">Internet & Lainnya</label>
                 <input 
                   type="number" 
-                  value={recipe.overhead_internet || 0}
+                  value={recipe.overhead_internet || ''}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 0;
                     const totalMonthly = val + (recipe.overhead_electricity || 0) + (recipe.overhead_rent || 0);
@@ -134,7 +134,7 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                 <label className="text-[10px] font-bold text-slate-500">Target Porsi / Bulan</label>
                 <input 
                   type="number" 
-                  value={recipe.target_portions || 1}
+                  value={recipe.target_portions === 1 ? '' : recipe.target_portions}
                   onChange={(e) => {
                     const val = parseFloat(e.target.value) || 1;
                     const totalMonthly = (recipe.overhead_electricity || 0) + (recipe.overhead_rent || 0) + (recipe.overhead_internet || 0);

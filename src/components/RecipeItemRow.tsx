@@ -24,6 +24,8 @@ const RecipeItemRow: React.FC<RecipeItemRowProps> = ({
         <select
           value={item.ingredient_id}
           onChange={(e) => onUpdate({ ingredient_id: parseInt(e.target.value) })}
+          aria-label="Pilih Item Bahan Baku"
+          title="Pilih Bahan Baku"
           className="input-premium py-3 text-sm font-bold bg-slate-50 border-none group-hover/row:bg-white"
         >
           <option value="0">Pilih Bahan...</option>
@@ -78,6 +80,8 @@ const RecipeItemRow: React.FC<RecipeItemRowProps> = ({
         <button
           type="button"
           onClick={onRemove}
+          aria-label="Hapus bahan baku dari resep"
+          title="Hapus"
           className="p-3 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
         >
           <Trash2 size={18} />

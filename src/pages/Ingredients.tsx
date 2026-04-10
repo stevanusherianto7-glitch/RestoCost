@@ -41,6 +41,12 @@ const CATEGORY_COLORS: Record<string, string> = {
   spices: 'bg-teal-50 text-teal-600 border-teal-100',
 };
 
+const UNIT_OPTIONS = [
+  'kg', 'g', 'liter', 'ml', 'pcs',
+  'karung', 'dus', 'pack', 'botol',
+  'sachet', 'ikat', 'kaleng', 'galon', 'box'
+];
+
 export default function Ingredients() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
@@ -258,8 +264,14 @@ export default function Ingredients() {
                 </div>
                 
                 <div className="space-y-1.5">
-                  <label className="label-premium">Satuan Beli</label>
-                  <input {...register('buy_unit')} className="input-premium py-4" placeholder="Contoh: Pack, Karung, Jerigen" />
+                  <label htmlFor="buy-unit-select" className="label-premium">Satuan Beli</label>
+                  <select id="buy-unit-select" {...register('buy_unit')} className="input-premium py-4 appearance-none" title="Pilih satuan beli">
+                    <option value="">Pilih Unit</option>
+                    {UNIT_OPTIONS.map(u => (
+                      <option key={u} value={u}>{u}</option>
+                    ))}
+                  </select>
+                  {errors.buy_unit && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest mt-1.5 ml-1">{errors.buy_unit.message}</p>}
                 </div>
                 
                 <div className="space-y-1.5">
@@ -268,8 +280,14 @@ export default function Ingredients() {
                 </div>
                 
                 <div className="space-y-1.5">
-                  <label className="label-premium">Satuan Pakai (Usage)</label>
-                  <input {...register('usage_unit')} className="input-premium py-4" placeholder="Contoh: gram, ml, pcs" />
+                  <label htmlFor="usage-unit-select" className="label-premium">Satuan Pakai (Usage)</label>
+                  <select id="usage-unit-select" {...register('usage_unit')} className="input-premium py-4 appearance-none" title="Pilih satuan pakai">
+                    <option value="">Pilih Unit</option>
+                    {UNIT_OPTIONS.map(u => (
+                      <option key={u} value={u}>{u}</option>
+                    ))}
+                  </select>
+                  {errors.usage_unit && <p className="text-rose-500 text-[10px] font-bold uppercase tracking-widest mt-1.5 ml-1">{errors.usage_unit.message}</p>}
                 </div>
               </div>
               

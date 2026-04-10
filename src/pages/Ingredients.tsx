@@ -117,55 +117,84 @@ export default function Ingredients() {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [210, 297] });
     const fileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`;
     
-    // Add Metadata to help browsers/OS identify the file
     doc.setProperties({
       title: "Database Bahan Baku",
       subject: "Inventory Report",
-      author: "RestoCost",
-      creator: "RestoCost App"
+      author: "PSRestoCost",
+      creator: "PSRestoCost ERP Engine"
     });
     
-    // Add Header
+    // ── Branding & Header ──
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(16, 185, 129); // emerald-500
+    doc.text('PSRestoCost ERP Engine', 14, 15);
+    
+    doc.setDrawColor(241, 245, 249); // slate-100
+    doc.line(14, 17, 196, 17);
+
     doc.setFontSize(22);
     doc.setTextColor(15, 23, 42); // slate-900
-    doc.text("Laporan Database Bahan Baku", 14, 22);
+    doc.text("DATABASE BAHAN BAKU", 14, 28);
     
-    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
     doc.setTextColor(100, 116, 139); // slate-500
-    doc.text(`Dicetak pada: ${new Date().toLocaleString('id-ID')}`, 14, 30);
-    doc.text(`Total: ${filteredIngredients.length} Item`, 14, 35);
+    doc.text(`Dicetak pada: ${new Date().toLocaleString('id-ID')}`, 14, 34);
+    doc.text(`Total Kapasitas: ${filteredIngredients.length} Item Terdaftar`, 14, 39);
     
-    // Generate Table
+    // ── Database Table ──
     const tableData = filteredIngredients.map((ing, index) => [
-      index + 1,
+      { content: (index + 1).toString(), styles: { halign: 'center' } },
       ing.name,
       CATEGORY_LABELS[ing.category] || ing.category,
-      `Rp ${ing.buy_price.toLocaleString('id-ID')}`,
+      { content: `Rp ${ing.buy_price.toLocaleString('id-ID')}`, styles: { halign: 'right' } },
       ing.buy_unit,
-      `Rp ${(ing.buy_price / (ing.conversion_qty || 1)).toLocaleString('id-ID', { maximumFractionDigits: 2 })} / ${ing.usage_unit}`
+      { 
+        content: `Rp ${(ing.buy_price / (ing.conversion_qty || 1)).toLocaleString('id-ID', { maximumFractionDigits: 2 })}`, 
+        styles: { halign: 'right', fontStyle: 'bold', textColor: [16, 185, 129] } 
+      },
+      ing.usage_unit
     ]);
     
     autoTable(doc, {
-      startY: 45,
-      head: [['No', 'Item / Bahan', 'Kategori', 'Harga Beli', 'Unit', 'Harga / Satuan Pakai']],
+      startY: 48,
+      head: [['No', 'Item / Nama Bahan', 'Kategori', 'Harga Beli', 'Unit', 'HPP / Unit', 'Pakai']],
       body: tableData,
-      headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' }, // emerald-500
-      alternateRowStyles: { fillColor: [248, 250, 252] }, // slate-50
-      styles: { fontSize: 9, cellPadding: 4 },
+      headStyles: { 
+        fillColor: [15, 23, 42], 
+        textColor: 255, 
+        fontStyle: 'bold',
+        fontSize: 9,
+        cellPadding: 4
+      },
+      alternateRowStyles: { fillColor: [252, 252, 252] },
+      styles: { 
+        fontSize: 8, 
+        cellPadding: 3, 
+        font: 'helvetica',
+        lineColor: [241, 245, 249],
+        lineWidth: 0.1
+      },
       columnStyles: {
         0: { cellWidth: 10 },
-        3: { halign: 'right' },
-        5: { halign: 'right' }
+        3: { cellWidth: 30 },
+        5: { cellWidth: 30 }
       }
     });
     
-    // Save with explicit filename via Blob
-    const pdfBlob = doc.output('blob');
-    const finalFileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`
-      .replace(/\s+/g, '_')
-      .replace(/[^a-zA-Z0-9_\-]/g, '')
-      + '.pdf';
+    // ── Footer ──
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184); // slate-400
+        doc.text('Dokumen Master Data Bahan Baku ini dihasilkan oleh PSRestoCost ERP Engine.', 14, 285);
+        doc.text(`Halaman ${i} dari ${pageCount}`, 196, 285, { align: 'right' });
+    }
 
+    const pdfBlob = doc.output('blob');
+    const finalFileName = `Database_Bahan_Baku_${new Date().toISOString().split('T')[0]}`.replace(/\s+/g, '_') + '.pdf';
     const url = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = url;

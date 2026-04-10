@@ -78,116 +78,127 @@ export default function RecipeDetail() {
         creator: 'RestoCost App',
       });
 
-      // ── Header ──
-      doc.setFontSize(22);
-      doc.setTextColor(15, 23, 42);
-      doc.text(recipe.name, 14, 22);
+      // ── Branding & Header ──
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(16, 185, 129); // emerald-500
+      doc.text('PSRestoCost ERP Engine', 14, 15);
+      
+      doc.setDrawColor(241, 245, 249); // slate-100
+      doc.line(14, 17, 196, 17);
 
-      doc.setFontSize(10);
-      doc.setTextColor(100, 116, 139);
-      doc.text(`Dicetak: ${new Date().toLocaleString('id-ID')}`, 14, 30);
-      doc.text(`Buffer: ${recipe.buffer_percentage}%  |  Target: ${recipe.target_portions} porsi`, 14, 36);
+      doc.setFontSize(24);
+      doc.setTextColor(15, 23, 42); // slate-900
+      doc.text(recipe.name.toUpperCase(), 14, 28);
 
-      // ── BOM Table ──
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text(`ID Resep: #${recipe.id.toString().padStart(4, '0')}`, 14, 34);
+      doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 14, 39);
+      
+      // Metadata Grid
+      doc.setFillColor(248, 250, 252); // slate-50
+      doc.roundedRect(14, 44, 182, 12, 2, 2, 'F');
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(71, 85, 105); // slate-600
+      doc.text('Waste Buffer:', 18, 51.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${recipe.buffer_percentage}%`, 45, 51.5);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Target Porsi:', 80, 51.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${recipe.target_portions} Porsi`, 105, 51.5);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Target Margin:', 140, 51.5);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${recipe.target_margin}%`, 170, 51.5);
+
+      // ── BOM Table (Bill of Materials) ──
       const bomData = recipe.items.map((item, i) => {
         const ing = ingredients.find(x => x.id === item.ingredient_id);
         const costPerUnit = ing && ing.conversion_qty > 0 ? ing.buy_price / ing.conversion_qty : 0;
         const subtotal = costPerUnit * item.amount;
         return [
-          i + 1,
+          { content: (i + 1).toString(), styles: { halign: 'center' } },
           ing?.name || '-',
           CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-',
-          `${item.amount} ${ing?.usage_unit || ''}`,
-          fmtRp(costPerUnit),
-          fmtRp(subtotal),
+          { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'right' } },
+          { content: fmtRp(costPerUnit), styles: { halign: 'right' } },
+          { content: fmtRp(subtotal), styles: { halign: 'right' } },
         ];
       });
 
       autoTable(doc, {
-        startY: 44,
-        head: [['No', 'Bahan', 'Kategori', 'Takaran', 'Harga/Unit', 'Subtotal']],
+        startY: 62,
+        head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', 'Harga/Unit', 'Subtotal']],
         body: bomData,
-        headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' },
-        alternateRowStyles: { fillColor: [248, 250, 252] },
-        styles: { fontSize: 9, cellPadding: 4 },
+        headStyles: { 
+          fillColor: [15, 23, 42], 
+          textColor: 255, 
+          fontStyle: 'bold',
+          fontSize: 9,
+          cellPadding: 4
+        },
+        alternateRowStyles: { fillColor: [252, 252, 252] },
+        styles: { 
+          fontSize: 8, 
+          cellPadding: 3, 
+          font: 'helvetica',
+          lineColor: [241, 245, 249],
+          lineWidth: 0.1
+        },
         columnStyles: {
           0: { cellWidth: 10 },
-          4: { halign: 'right' },
-          5: { halign: 'right' },
+          2: { cellWidth: 30 },
         },
       });
 
-      // ── Cost Summary ──
-      const summaryY = (doc as any).lastAutoTable.finalY + 12;
+      // ── Cost Summary & Analysis ──
+      const finalY = (doc as any).lastAutoTable.finalY + 15;
+      
+      // Check if we need a new page
+      let currentY = finalY;
+      if (currentY > 220) {
+        doc.addPage();
+        currentY = 20;
+      }
 
-      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
       doc.setTextColor(15, 23, 42);
-      doc.text('Struktur Biaya (Per Porsi)', 14, summaryY);
+      doc.text('Rincian Biaya & Profitabilitas', 14, currentY);
 
+      const hpp = hppResult; // Using the one already calculated below
       const laborCost = hpp.primeCost - hpp.rawMaterialCost - hpp.packagingCost;
       const overheadCost = hpp.totalOperationalCost - laborCost;
 
-      const summaryRows = [
-        ['Bahan Baku (HPP)', fmtRp(hpp.rawMaterialCost)],
-        ['Kemasan (HPP)', fmtRp(hpp.packagingCost)],
-        [`Waste Buffer (${recipe.buffer_percentage || 0}%)`, fmtRp(hpp.bufferCost)],
-        ['TOTAL HPP (COGS)', fmtRp(hpp.totalHPP)],
-        ['Biaya Tenaga Kerja (OPEX)', fmtRp(laborCost)],
-        ['Biaya Overhead (OPEX)', fmtRp(overheadCost)],
-        ['TOTAL OPEX', fmtRp(hpp.totalOperationalCost)],
+      const summaryData = [
+        ['Bahan Baku & Kemasan', '', fmtRp(hpp.rawMaterialCost + hpp.packagingCost)],
+        [`Waste Buffer (${recipe.buffer_percentage}%)`, '', fmtRp(hpp.bufferCost)],
+        ['TOTAL HPP (COGS)', '', { content: fmtRp(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        ['Beban Tenaga Kerja', '', fmtRp(laborCost)],
+        ['Beban Overhead', '', fmtRp(overheadCost)],
+        ['TOTAL OPEX', '', { content: fmtRp(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        ['', '', ''],
+        ['HARGA JUAL (NETT)', '', { content: fmtRp(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }],
+        ['Laba Kotor (Gross Profit)', '', fmtRp(hpp.grossProfit)],
+        ['LABA BERSIH (NET PROFIT)', '', { content: fmtRp(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }],
       ];
 
       autoTable(doc, {
-        startY: summaryY + 4,
-        body: summaryRows,
+        startY: currentY + 5,
+        body: summaryData,
         theme: 'plain',
-        styles: { fontSize: 10, cellPadding: 3 },
+        styles: { fontSize: 9, cellPadding: 3 },
         columnStyles: {
-          0: { fontStyle: 'bold', cellWidth: 80 },
-          1: { halign: 'right' },
+          0: { cellWidth: 80 },
+          1: { cellWidth: 40 },
+          2: { halign: 'right', cellWidth: 62 },
         },
-        didParseCell: (data: any) => {
-          if (data.row.index === 3 || data.row.index === 6) {
-            data.cell.styles.fillColor = [241, 245, 249];
-            data.cell.styles.textColor = [15, 23, 42];
-            data.cell.styles.fontStyle = 'bold';
-          }
-        },
-      });
-
-      // ── Pricing Analysis ──
-      const pricingY = (doc as any).lastAutoTable.finalY + 12;
-
-      doc.setFontSize(14);
-      doc.setTextColor(15, 23, 42);
-      doc.text('Analisis Harga & Profitabilitas', 14, pricingY);
-
-      const pricingRows = [
-        ['Harga Jual Aktual', fmtRp(recipe.selling_price || 0)],
-        ['Laba Kotor (Gross Profit)', fmtRp(hpp.grossProfit)],
-        ['Laba Bersih (Net Profit)', fmtRp(hpp.netProfit)],
-        ['Food Cost (FC %)', `${hpp.foodCostPercentage.toFixed(1)}%`],
-        ['Margin Laba Kotor', `${hpp.currentMargin.toFixed(1)}%`],
-        [`Harga Rekomendasi (Target: ${recipe.target_margin || 65}%)`, fmtRp(hpp.recommendedPrice)],
-      ];
-
-      autoTable(doc, {
-        startY: pricingY + 4,
-        body: pricingRows,
-        theme: 'plain',
-        styles: { fontSize: 10, cellPadding: 3 },
-        columnStyles: {
-          0: { fontStyle: 'bold', cellWidth: 80 },
-          1: { halign: 'right' },
-        },
-        didParseCell: (data: any) => {
-          if (data.row.index === 2) {
-             data.cell.styles.textColor = [16, 185, 129];
-          } else if (data.row.index === 5) {
-             data.cell.styles.fillColor = [16, 185, 129];
-             data.cell.styles.textColor = 255;
-          }
-        }
       });
 
       // ── Footer ──
@@ -195,8 +206,9 @@ export default function RecipeDetail() {
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
-        doc.setTextColor(180);
-        doc.text(`RestoCost — ${recipe.name} — Hal ${i}/${pageCount}`, 14, doc.internal.pageSize.height - 10);
+        doc.setTextColor(148, 163, 184); // slate-400
+        doc.text('Dokumen ini dihasilkan secara otomatis oleh PSRestoCost ERP Engine.', 14, 285);
+        doc.text(`Halaman ${i} dari ${pageCount}`, 196, 285, { align: 'right' });
       }
 
       // ── Save with explicit filename ──

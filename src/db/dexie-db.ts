@@ -1,11 +1,14 @@
 import Dexie, { type Table } from 'dexie';
-import { Ingredient, Employee, Recipe, RecipeItem } from '../types';
+import { Ingredient, Employee, Recipe, RecipeItem, Sale, Purchase, StockOpname } from '../types';
 
 export class RestoCostDatabase extends Dexie {
   ingredients!: Table<Ingredient>;
   employees!: Table<Employee>;
   recipes!: Table<Recipe>;
   recipeItems!: Table<RecipeItem>;
+  sales!: Table<Sale>;
+  purchases!: Table<Purchase>;
+  stockOpnames!: Table<StockOpname>;
 
   constructor() {
     super('RestoCostDB');
@@ -14,6 +17,13 @@ export class RestoCostDatabase extends Dexie {
       employees: '++id, name, position',
       recipes: '++id, name',
       recipeItems: '++id, recipe_id, ingredient_id'
+    });
+
+    this.version(2).stores({
+      ingredients: '++id, name, category',
+      sales: '++id, recipe_id, date',
+      purchases: '++id, ingredient_id, date',
+      stockOpnames: '++id, ingredient_id, date'
     });
   }
 }
@@ -28,6 +38,8 @@ db.on('populate', () => {
     buy_price: 0,
     buy_unit: 'kg',
     conversion_qty: 1,
-    usage_unit: 'kg'
+    usage_unit: 'kg',
+    current_stock: 10,
+    safety_stock: 2
   } as Ingredient);
 });

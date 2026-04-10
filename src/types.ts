@@ -9,6 +9,37 @@ export interface Ingredient {
   buy_unit: string;
   conversion_qty: number;
   usage_unit: string;
+  current_stock: number;
+  safety_stock: number;
+}
+
+export interface Sale {
+  id?: number;
+  recipe_id: number;
+  recipe_name?: string;
+  quantity: number;
+  total_price: number;
+  date: string;
+}
+
+export interface Purchase {
+  id?: number;
+  ingredient_id: number;
+  ingredient_name?: string;
+  quantity: number;
+  unit_price: number;
+  unit: string;
+  date: string;
+}
+
+export interface StockOpname {
+  id?: number;
+  ingredient_id: number;
+  ingredient_name?: string;
+  physical_qty: number;
+  theoretical_qty: number;
+  variance: number;
+  date: string;
 }
 
 export interface RecipeItem {

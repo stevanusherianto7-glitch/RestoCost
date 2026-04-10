@@ -94,6 +94,8 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                     const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
                     onUpdateRecipe({ overhead_electricity: val, overhead_cost: perPortion });
                   }}
+                  aria-label="Listrik, Air & Gas bulanan"
+                  placeholder="0"
                   className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
                 />
               </div>
@@ -108,6 +110,8 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                     const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
                     onUpdateRecipe({ overhead_rent: val, overhead_cost: perPortion });
                   }}
+                  aria-label="Sewa tempat bulanan"
+                  placeholder="0"
                   className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
                 />
               </div>
@@ -122,6 +126,8 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                     const perPortion = recipe.target_portions > 0 ? totalMonthly / recipe.target_portions : 0;
                     onUpdateRecipe({ overhead_internet: val, overhead_cost: perPortion });
                   }}
+                  aria-label="Internet & biaya lainnya"
+                  placeholder="0"
                   className="w-full bg-white border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-amber-500/20" 
                 />
               </div>
@@ -136,6 +142,8 @@ const OperationalCostsSection: React.FC<OperationalCostsSectionProps> = ({
                     const perPortion = totalMonthly / val;
                     onUpdateRecipe({ target_portions: val, overhead_cost: perPortion });
                   }}
+                  aria-label="Target porsi per bulan"
+                  placeholder="1"
                   className="w-full bg-emerald-50 text-emerald-700 border-none rounded-xl px-4 py-2 text-sm font-bold shadow-sm focus:ring-2 focus:ring-emerald-500/20" 
                 />
               </div>

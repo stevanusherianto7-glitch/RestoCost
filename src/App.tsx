@@ -4,17 +4,19 @@ import Ingredients from './pages/Ingredients';
 import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import Employees from './pages/Employees';
+import ERPDashboard from './pages/ERPDashboard';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/" element={<Navigate to="/recipes" replace />} />
+          <Route path="/" element={<Navigate to="/erp" replace />} />
           <Route path="/ingredients" element={<Ingredients />} />
           <Route path="/recipes" element={<Recipes />} />
           <Route path="/recipes/:id" element={<RecipeDetail />} />
           <Route path="/employees" element={<Employees />} />
+          <Route path="/erp" element={<ERPDashboard />} />
         </Routes>
       </Layout>
     </BrowserRouter>

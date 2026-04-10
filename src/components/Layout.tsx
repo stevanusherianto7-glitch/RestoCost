@@ -7,6 +7,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   const navItems = [
+    { name: 'ERP Engine', href: '/erp', icon: LayoutDashboard },
     { name: 'Bahan Baku', href: '/ingredients', icon: UtensilsCrossed },
     { name: 'Resep Menu', href: '/recipes', icon: ChefHat },
     { name: 'Karyawan', href: '/employees', icon: Users },

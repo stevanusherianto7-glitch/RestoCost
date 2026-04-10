@@ -177,7 +177,7 @@ export default function Ingredients() {
         lineWidth: 0.1
       },
       columnStyles: {
-        0: { cellWidth: 10 },
+        0: { cellWidth: 15 },
         3: { cellWidth: 30 },
         5: { cellWidth: 30 }
       }

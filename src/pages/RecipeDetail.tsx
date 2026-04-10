@@ -152,7 +152,7 @@ export default function RecipeDetail() {
           lineWidth: 0.1
         },
         columnStyles: {
-          0: { cellWidth: 10 },
+          0: { cellWidth: 15 },
           2: { cellWidth: 30 },
         },
       });

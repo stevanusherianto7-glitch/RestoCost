@@ -25,7 +25,7 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
             <p className="text-[10px] font-black text-emerald-50 uppercase tracking-widest border-b border-emerald-500/50 pb-1">HPP (COGS)</p>
             {[
               { label: 'Bahan Baku', value: hppResult.rawMaterialCost },
-              { label: 'Kemasan', value: hppResult.packagingCost },
+              { label: 'Kemasan Take Away', value: hppResult.packagingCost },
               { label: 'Waste Buffer', value: hppResult.bufferCost },
             ].map((item, idx) => (
               <div key={idx} className="flex justify-between items-center text-emerald-50">

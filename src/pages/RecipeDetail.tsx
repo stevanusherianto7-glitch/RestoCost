@@ -200,7 +200,7 @@ export default function RecipeDetail() {
 
       const summaryData = [
         [{ content: 'HPP (COGS)', styles: { fontStyle: 'bold', textColor: [100, 116, 139] } }, '', ''],
-        ['Bahan Baku & Kemasan', 'Rp', fmtVal(hpp.rawMaterialCost + hpp.packagingCost)],
+        ['Bahan Baku & Kemasan Take Away', 'Rp', fmtVal(hpp.rawMaterialCost + hpp.packagingCost)],
         [`Waste Buffer (${recipe.buffer_percentage}%)`, 'Rp', fmtVal(hpp.bufferCost)],
         [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalHPP), styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }],
         ['', '', ''],

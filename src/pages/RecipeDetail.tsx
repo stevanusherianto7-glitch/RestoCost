@@ -199,16 +199,20 @@ export default function RecipeDetail() {
       const marginColor = recipe.selling_price > hpp.totalHPP ? EMERALD : AMBER;
 
       const summaryData = [
+        [{ content: 'HPP (COGS)', styles: { fontStyle: 'bold', textColor: [100, 116, 139] } }, '', ''],
         ['Bahan Baku & Kemasan', 'Rp', fmtVal(hpp.rawMaterialCost + hpp.packagingCost)],
         [`Waste Buffer (${recipe.buffer_percentage}%)`, 'Rp', fmtVal(hpp.bufferCost)],
-        [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalHPP), styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }],
+        ['', '', ''],
+        [{ content: 'BEBAN OPERASI (OPEX)', styles: { fontStyle: 'bold', textColor: [100, 116, 139] } }, '', ''],
         ['Beban Tenaga Kerja', 'Rp', fmtVal(laborCost)],
         ['Beban Overhead', 'Rp', fmtVal(overheadCost)],
-        [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fontSize: 11, fillColor: [248, 250, 252] } }],
         ['', '', ''],
+        [{ content: 'ESTIMASI LABA PER PORSI', styles: { fontStyle: 'bold', textColor: [100, 116, 139] } }, '', ''],
         [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: 'Rp', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: fmtVal(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: marginColor } }],
         [{ content: 'Gross Profit', styles: { fontStyle: 'bold' } }, { content: 'Rp', styles: { fontStyle: 'bold' } }, { content: fmtVal(hpp.grossProfit), styles: { fontStyle: 'bold' } }],
-        [{ content: 'Net Profit', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }],
+        [{ content: 'Net Profit', styles: { fontStyle: 'bold', fontSize: 12, fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fontSize: 12, fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fontSize: 12, fillColor: profitColor, textColor: 255 } }],
       ];
 
       autoTable(doc, {

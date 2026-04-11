@@ -26,11 +26,11 @@ const RecipeItemRow: React.FC<RecipeItemRowProps> = ({
           onChange={(e) => onUpdate({ ingredient_id: parseInt(e.target.value) })}
           aria-label="Pilih Item Bahan Baku"
           title="Pilih Bahan Baku"
-          className="input-premium py-3 text-sm font-bold bg-slate-50 border-none group-hover/row:bg-white"
+          className="input-premium py-3 text-sm font-bold bg-slate-50 border-none group-hover/row:bg-white capitalize"
         >
           <option value="0">Pilih Bahan...</option>
           {ingredients.map((ing) => (
-            <option key={ing.id} value={ing.id}>{ing.name}</option>
+            <option key={ing.id} value={ing.id} className="capitalize">{ing.name}</option>
           ))}
         </select>
       </div>

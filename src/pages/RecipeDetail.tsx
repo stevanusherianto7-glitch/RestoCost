@@ -246,7 +246,7 @@ export default function RecipeDetail() {
         doc.setTextColor(148, 163, 184); // slate-400
         
         // Draw bottom-pinned footer
-        const footerY = pageHeight - 10;
+        const footerY = pageHeight - 6;
         
         doc.setDrawColor(241, 245, 249);
         doc.line(MARGIN, footerY - 5, MARGIN + CONTENT_WIDTH, footerY - 5); // Separation line

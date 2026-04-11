@@ -128,20 +128,20 @@ export default function Ingredients() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(16, 185, 129); // emerald-500
-    doc.text('PSRestoCost ERP Engine', 14, 15);
+    doc.text('PSRestoCost ERP Engine', 196, 10, { align: 'right' });
     
     doc.setDrawColor(241, 245, 249); // slate-100
-    doc.line(14, 17, 196, 17);
+    doc.line(14, 12, 196, 12);
 
-    doc.setFontSize(22);
+    doc.setFontSize(18);
     doc.setTextColor(15, 23, 42); // slate-900
-    doc.text("DATABASE BAHAN BAKU", 14, 28);
+    doc.text("DATABASE BAHAN BAKU", 14, 22);
     
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139); // slate-500
-    doc.text(`Dicetak pada: ${new Date().toLocaleString('id-ID')}`, 14, 34);
-    doc.text(`Total Kapasitas: ${filteredIngredients.length} Item Terdaftar`, 14, 39);
+    doc.text(`Dicetak pada: ${new Date().toLocaleString('id-ID')}`, 14, 28);
+    doc.text(`Total Kapasitas: ${filteredIngredients.length} Item Terdaftar`, 14, 33);
     
     // ── Database Table ──
     const tableData = filteredIngredients.map((ing, index) => {
@@ -163,7 +163,7 @@ export default function Ingredients() {
     });
     
     autoTable(doc, {
-      startY: 48,
+      startY: 42,
       head: [['No', 'Item / Nama Bahan', 'Kategori', 'Harga Beli', 'Unit', 'HPP / Unit', 'Pakai']],
       body: tableData,
       headStyles: { 
@@ -194,8 +194,10 @@ export default function Ingredients() {
         doc.setPage(i);
         doc.setFontSize(8);
         doc.setTextColor(148, 163, 184); // slate-400
-        doc.text('Dokumen Master Data Bahan Baku ini dihasilkan oleh PSRestoCost ERP Engine.', 14, 285);
-        doc.text(`Halaman ${i} dari ${pageCount}`, 196, 285, { align: 'right' });
+        const footerY = 287; // Absolute bottom
+        doc.line(14, footerY - 5, 196, footerY - 5);
+        doc.text('Dokumen Master Data Bahan Baku ini dihasilkan oleh PSRestoCost ERP Engine.', 14, footerY);
+        doc.text(`Halaman ${i} dari ${pageCount}`, 196, footerY, { align: 'right' });
     }
 
     const pdfBlob = doc.output('blob');

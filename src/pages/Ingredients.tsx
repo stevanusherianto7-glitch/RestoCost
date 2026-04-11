@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   dry_goods: 'Bahan Pokok',
   condiment: 'Bumbu & Saus',
   processed: 'Bahan Olahan',
-  supplies: 'Kemasan & Lainnya',
+  supplies: 'Kemasan Take Away',
   spices: 'Bahan Rempah & Aromatik',
 };
 

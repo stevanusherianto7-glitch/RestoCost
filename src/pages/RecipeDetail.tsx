@@ -161,21 +161,21 @@ export default function RecipeDetail() {
         alternateRowStyles: { fillColor: [252, 252, 252] },
         styles: { 
           fontSize: 7.5, 
-          cellPadding: 2, 
+          cellPadding: 2.5, 
           font: 'helvetica',
           lineColor: [241, 245, 249],
           lineWidth: 0.1,
           overflow: 'linebreak'
         },
         columnStyles: {
-          0: { cellWidth: 8, halign: 'center' },
+          0: { cellWidth: 10, halign: 'center' },
           1: { cellWidth: 'auto' },
           2: { cellWidth: 32, halign: 'center' },
-          3: { cellWidth: 15, halign: 'center' },
+          3: { cellWidth: 20, halign: 'center' },
           4: { cellWidth: 6, halign: 'left', cellPadding: { left: 1, right: 0 } },
-          5: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 1 } },
+          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 1 } },
           6: { cellWidth: 6, halign: 'left', cellPadding: { left: 1, right: 0 } },
-          7: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 1 }, fontStyle: 'bold' },
+          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 1 }, fontStyle: 'bold' },
         },
       });
 

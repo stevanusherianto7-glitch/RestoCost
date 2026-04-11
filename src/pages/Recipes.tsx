@@ -146,8 +146,6 @@ export default function Recipes() {
               
               <div className="mt-8 pt-6 border-t border-slate-50 flex justify-between items-center">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Margin</span>
-                  <span className="text-lg font-black text-slate-900">{recipe.buffer_percentage}%</span>
                 </div>
                 <Link
                   to={`/recipes/${recipe.id}`}

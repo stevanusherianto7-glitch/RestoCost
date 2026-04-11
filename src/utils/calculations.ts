@@ -47,9 +47,16 @@ export const calculateHPP = (recipe: Recipe, ingredients: Ingredient[]): Calcula
   
   // Recommended Price is based ONLY on COGS and Target Margin !!
   const targetMargin = recipe.target_margin || 65; 
-  const recommendedPrice = targetMargin < 100 
-    ? totalHPP / (1 - (targetMargin / 100))
-    : totalHPP * 2;
+  let recommendedPrice = 0;
+  
+  if (targetMargin < 100) {
+    // Standard Gross Margin Logic
+    recommendedPrice = totalHPP / (1 - (targetMargin / 100));
+  } else {
+    // Cost-Plus (Markup) Logic for targets >= 100%
+    // Price = Cost + (Margin% * Cost)
+    recommendedPrice = totalHPP * (1 + (targetMargin / 100));
+  }
 
   // Actual Margins & Costs based on user's selected Selling Price
   const sp = recipe.selling_price || 0;

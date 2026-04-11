@@ -45,7 +45,7 @@ const HPPAnalysisBar: React.FC<HPPAnalysisBarProps> = ({
                 <input
                   type="range"
                   min="5"
-                  max="80"
+                  max="150"
                   step="1"
                   value={recipe.target_margin || 65}
                   onChange={(e) => onUpdateRecipe({ target_margin: parseInt(e.target.value) })}
@@ -53,7 +53,7 @@ const HPPAnalysisBar: React.FC<HPPAnalysisBarProps> = ({
                   aria-label="Target Margin Percentage"
                   className="w-32 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
                 />
-                <span className="text-lg font-black text-slate-900 w-10">{recipe.target_margin || 65}%</span>
+                <span className="text-lg font-black text-slate-900 w-14">{recipe.target_margin || 65}%</span>
               </div>
             </div>
           </div>

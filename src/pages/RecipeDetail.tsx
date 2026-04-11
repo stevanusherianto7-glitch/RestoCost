@@ -131,12 +131,14 @@ export default function RecipeDetail() {
         const ing = ingredients.find(x => x.id === item.ingredient_id);
         const costPerUnit = ing && ing.conversion_qty > 0 ? ing.buy_price / ing.conversion_qty : 0;
         const subtotal = costPerUnit * item.amount;
-        const ingName = ing?.name ? ing.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '-';
+        const rawUsageUnit = ing?.usage_unit || '';
+        const usageUnit = rawUsageUnit === 'g' ? 'gr' : rawUsageUnit;
+
         return [
           { content: (i + 1).toString(), styles: { halign: 'center' } },
           ingName,
           { content: CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-', styles: { halign: 'center' } },
-          { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'center' } },
+          { content: `${item.amount} ${usageUnit}`, styles: { halign: 'center' } },
           { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
           { content: fmtVal(costPerUnit), styles: { halign: 'center' } },
           { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },

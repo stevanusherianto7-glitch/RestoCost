@@ -42,7 +42,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const UNIT_OPTIONS = [
-  'kg', 'g', 'liter', 'ml', 'pcs',
+  'kg', 'gr', 'liter', 'ml', 'pcs',
   'karung', 'dus', 'pack', 'botol',
   'sachet', 'ikat', 'kaleng', 'galon', 'box'
 ];
@@ -144,18 +144,23 @@ export default function Ingredients() {
     doc.text(`Total Kapasitas: ${filteredIngredients.length} Item Terdaftar`, 14, 39);
     
     // ── Database Table ──
-    const tableData = filteredIngredients.map((ing, index) => [
-      { content: (index + 1).toString(), styles: { halign: 'center' } },
-      ing.name,
-      CATEGORY_LABELS[ing.category] || ing.category,
-      { content: `Rp ${ing.buy_price.toLocaleString('id-ID')}`, styles: { halign: 'right' } },
-      ing.buy_unit,
-      { 
-        content: `Rp ${(ing.buy_price / (ing.conversion_qty || 1)).toLocaleString('id-ID', { maximumFractionDigits: 2 })}`, 
-        styles: { halign: 'right', fontStyle: 'bold', textColor: [16, 185, 129] } 
-      },
-      ing.usage_unit
-    ]);
+    const tableData = filteredIngredients.map((ing, index) => {
+      const ingName = ing.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      const usageUnit = ing.usage_unit === 'g' ? 'gr' : ing.usage_unit;
+      
+      return [
+        { content: (index + 1).toString(), styles: { halign: 'center' } },
+        ingName,
+        CATEGORY_LABELS[ing.category] || ing.category,
+        { content: `Rp ${ing.buy_price.toLocaleString('id-ID')}`, styles: { halign: 'right' } },
+        ing.buy_unit,
+        { 
+          content: `Rp ${(ing.buy_price / (ing.conversion_qty || 1)).toLocaleString('id-ID', { maximumFractionDigits: 2 })}`, 
+          styles: { halign: 'right', fontStyle: 'bold', textColor: [16, 185, 129] } 
+        },
+        usageUnit
+      ];
+    });
     
     autoTable(doc, {
       startY: 48,
@@ -362,7 +367,9 @@ export default function Ingredients() {
                 return (
                   <tr key={ing.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="text-sm font-bold text-slate-900 capitalize">{ing.name}</div>
+                      <div className="text-sm font-bold text-slate-900 capitalize-words">
+                        {ing.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}
+                      </div>
                       <div className="text-[10px] text-slate-400 font-medium mt-1">ID: #{ing.id?.toString().padStart(4, '0')}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
@@ -372,13 +379,13 @@ export default function Ingredients() {
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
                       <div className="text-sm font-bold text-slate-900">Rp {ing.buy_price.toLocaleString('id-ID')}</div>
-                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Per {ing.buy_unit}</div>
+                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Per {ing.buy_unit === 'g' ? 'gr' : ing.buy_unit}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
                       <div className="text-sm font-bold text-slate-900">
                         Rp {pricePerUnit.toLocaleString('id-ID', { maximumFractionDigits: 2 })}
                       </div>
-                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Netto 1 {ing.usage_unit}</div>
+                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Netto 1 {ing.usage_unit === 'g' ? 'gr' : ing.usage_unit}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-2">

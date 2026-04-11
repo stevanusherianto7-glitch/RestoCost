@@ -93,7 +93,7 @@ export default function ERPDashboard() {
           <input 
             type="text" 
             placeholder="Ketik Perintah (e.g. [SALES_SYNC])"
-            className="input-premium pl-12 pr-4 py-4 font-mono text-sm bg-slate-900 text-emerald-400 placeholder:text-slate-600 focus:ring-emerald-500/30 border-slate-800"
+            className="input-premium !pl-12 pr-4 py-4 font-mono text-sm bg-slate-900 text-emerald-400 placeholder:text-slate-600 focus:ring-emerald-500/30 border-slate-800"
             value={command}
             onChange={(e) => setCommand(e.target.value)}
           />

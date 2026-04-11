@@ -150,7 +150,7 @@ export default function RecipeDetail() {
         head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', '', 'Harga/Unit', '', 'Subtotal']],
         body: bomData,
         headStyles: { 
-          fillColor: [15, 23, 42], 
+          fillColor: [30, 64, 175], // Corporate Blue (blue-800)
           textColor: 255, 
           fontStyle: 'bold',
           fontSize: 9,

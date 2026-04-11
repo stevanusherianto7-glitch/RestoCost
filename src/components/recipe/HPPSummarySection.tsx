@@ -61,11 +61,11 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
           <div className="space-y-3 text-sm bg-black/10 -mx-4 p-4 rounded-2xl">
             <p className="text-[10px] font-black text-amber-200 uppercase tracking-widest border-b border-emerald-500/30 pb-1 mb-2">Estimasi Laba per Porsi</p>
             <div className="flex justify-between items-center text-emerald-50">
-               <span className="font-bold opacity-90">Gross Profit (Kotor)</span>
+               <span className="font-bold opacity-90">Gross Profit</span>
                <span className="font-bold">Rp {hppResult.grossProfit.toLocaleString('id-ID')}</span>
             </div>
             <div className="flex justify-between items-center text-white pt-1">
-               <span className="font-black">Net Profit (Bersih)</span>
+               <span className="font-black">Net Profit</span>
                <span className="font-black text-amber-400 text-lg whitespace-nowrap">Rp {hppResult.netProfit.toLocaleString('id-ID')}</span>
             </div>
           </div>

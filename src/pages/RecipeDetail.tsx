@@ -206,8 +206,8 @@ export default function RecipeDetail() {
         [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
         ['', '', ''],
         [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: 'Rp', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: fmtVal(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: marginColor } }],
-        [{ content: 'Laba Kotor (Gross Profit)', styles: { fontStyle: 'bold' } }, { content: 'Rp', styles: { fontStyle: 'bold' } }, { content: fmtVal(hpp.grossProfit), styles: { fontStyle: 'bold' } }],
-        [{ content: 'LABA BERSIH (NET PROFIT)', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }],
+        [{ content: 'Gross Profit', styles: { fontStyle: 'bold' } }, { content: 'Rp', styles: { fontStyle: 'bold' } }, { content: fmtVal(hpp.grossProfit), styles: { fontStyle: 'bold' } }],
+        [{ content: 'Net Profit', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }],
       ];
 
       autoTable(doc, {

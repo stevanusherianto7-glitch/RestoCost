@@ -362,23 +362,23 @@ export default function Ingredients() {
                 return (
                   <tr key={ing.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="font-black text-slate-800 group-hover:text-emerald-600 transition-colors capitalize">{ing.name}</div>
-                      <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1.5 opacity-60">ID: #{ing.id?.toString().padStart(4, '0')}</div>
+                      <div className="text-sm font-bold text-slate-900 capitalize">{ing.name}</div>
+                      <div className="text-[10px] text-slate-400 font-medium mt-1">ID: #{ing.id?.toString().padStart(4, '0')}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[ing.category] || 'bg-slate-50 text-slate-400'}`}>
+                      <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${CATEGORY_COLORS[ing.category] || 'bg-slate-50 text-slate-400'}`}>
                         {CATEGORY_LABELS[ing.category] || ing.category}
                       </span>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="text-sm font-bold text-slate-600">Rp {ing.buy_price.toLocaleString('id-ID')}</div>
-                      <div className="text-[10px] text-slate-400 font-medium">Per {ing.buy_unit}</div>
+                      <div className="text-sm font-bold text-slate-900">Rp {ing.buy_price.toLocaleString('id-ID')}</div>
+                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Per {ing.buy_unit}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="text-base font-black text-emerald-600 select-all">
+                      <div className="text-sm font-bold text-slate-900">
                         Rp {pricePerUnit.toLocaleString('id-ID', { maximumFractionDigits: 2 })}
                       </div>
-                      <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Netto 1 {ing.usage_unit}</div>
+                      <div className="text-[10px] text-slate-400 font-medium leading-tight">Netto 1 {ing.usage_unit}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap text-right">
                       <div className="flex justify-end gap-2">

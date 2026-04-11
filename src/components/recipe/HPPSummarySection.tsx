@@ -35,7 +35,7 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
             ))}
             <div className="flex justify-between items-center text-white mt-2 pt-2 border-t border-emerald-500/50">
               <span className="font-black">Total HPP</span>
-              <span className="font-black text-xl">Rp {hppResult.totalHPP.toLocaleString('id-ID')}</span>
+              <span className="font-black text-lg whitespace-nowrap">Rp {hppResult.totalHPP.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
@@ -53,7 +53,7 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
             ))}
             <div className="flex justify-between items-center text-white mt-2 pt-2 border-t border-emerald-500/50">
               <span className="font-black opacity-90">Total OPEX</span>
-              <span className="font-black text-xl">Rp {hppResult.totalOperationalCost.toLocaleString('id-ID')}</span>
+              <span className="font-black text-lg whitespace-nowrap">Rp {hppResult.totalOperationalCost.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
@@ -66,7 +66,7 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
             </div>
             <div className="flex justify-between items-center text-white pt-1">
                <span className="font-black">Net Profit (Bersih)</span>
-               <span className="font-black text-amber-400 text-2xl">Rp {hppResult.netProfit.toLocaleString('id-ID')}</span>
+               <span className="font-black text-amber-400 text-lg whitespace-nowrap">Rp {hppResult.netProfit.toLocaleString('id-ID')}</span>
             </div>
           </div>
         </div>

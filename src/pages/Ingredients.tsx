@@ -366,7 +366,7 @@ export default function Ingredients() {
                       <div className="text-[10px] text-slate-400 font-medium mt-1">ID: #{ing.id?.toString().padStart(4, '0')}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${CATEGORY_COLORS[ing.category] || 'bg-slate-50 text-slate-400'}`}>
+                      <span className={`px-3 py-1 rounded-lg text-[10px] font-bold border ${CATEGORY_COLORS[ing.category] || 'bg-slate-50 text-slate-400'}`}>
                         {CATEGORY_LABELS[ing.category] || ing.category}
                       </span>
                     </td>

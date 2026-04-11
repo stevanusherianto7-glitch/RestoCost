@@ -34,11 +34,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   perishable: 'bg-rose-50 text-rose-600 border-rose-100',
-  dry_goods: 'bg-amber-50 text-amber-600 border-amber-100',
-  condiment: 'bg-orange-50 text-orange-600 border-orange-100',
-  processed: 'bg-blue-50 text-blue-600 border-blue-100',
-  supplies: 'bg-slate-50 text-slate-600 border-slate-100',
-  spices: 'bg-teal-50 text-teal-600 border-teal-100',
+  dry_goods: 'bg-rose-50 text-rose-600 border-rose-100',
+  condiment: 'bg-rose-50 text-rose-600 border-rose-100',
+  processed: 'bg-rose-50 text-rose-600 border-rose-100',
+  supplies: 'bg-rose-50 text-rose-600 border-rose-100',
+  spices: 'bg-rose-50 text-rose-600 border-rose-100',
 };
 
 const UNIT_OPTIONS = [

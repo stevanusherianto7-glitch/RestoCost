@@ -1,6 +1,10 @@
 import { db } from '../db/dexie-db';
 import { Ingredient, Employee, Recipe, RecipeItem } from '../types';
 
+const capitalize = (str: string) => {
+  return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+};
+
 export class DataService {
   // Ingredients
   static async getIngredients(): Promise<Ingredient[]> {
@@ -8,11 +12,16 @@ export class DataService {
   }
 
   static async saveIngredient(ingredient: Omit<Ingredient, 'id'> & { id?: number }): Promise<number> {
+    const formattedIngredient = {
+      ...ingredient,
+      name: capitalize(ingredient.name.trim())
+    };
+
     if (ingredient.id) {
-      await db.ingredients.update(ingredient.id, ingredient);
+      await db.ingredients.update(ingredient.id, formattedIngredient);
       return ingredient.id;
     }
-    return (await db.ingredients.add(ingredient as Ingredient)) as number;
+    return (await db.ingredients.add(formattedIngredient as Ingredient)) as number;
   }
 
   static async deleteIngredient(id: number): Promise<void> {
@@ -69,15 +78,19 @@ export class DataService {
 
   static async saveRecipe(recipeData: any): Promise<number> {
     const { items, ...recipe } = recipeData;
+    const formattedRecipe = {
+      ...recipe,
+      name: capitalize(recipe.name.trim())
+    };
     
     return await db.transaction('rw', db.recipes, db.recipeItems, async () => {
       let recipeId = recipe.id;
       if (recipeId) {
-        await db.recipes.update(recipeId, recipe);
+        await db.recipes.update(recipeId, formattedRecipe);
         // Clear existing items
         await db.recipeItems.where('recipe_id').equals(recipeId).delete();
       } else {
-        recipeId = (await db.recipes.add(recipe as Recipe)) as number;
+        recipeId = (await db.recipes.add(formattedRecipe as Recipe)) as number;
       }
 
       // Add new items

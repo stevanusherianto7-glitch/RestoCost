@@ -362,7 +362,7 @@ export default function Ingredients() {
                 return (
                   <tr key={ing.id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-8 py-6 whitespace-nowrap">
-                      <div className="font-black text-slate-800 group-hover:text-emerald-600 transition-colors">{ing.name}</div>
+                      <div className="font-black text-slate-800 group-hover:text-emerald-600 transition-colors capitalize">{ing.name}</div>
                       <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1.5 opacity-60">ID: #{ing.id?.toString().padStart(4, '0')}</div>
                     </td>
                     <td className="px-8 py-6 whitespace-nowrap">

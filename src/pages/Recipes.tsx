@@ -142,7 +142,7 @@ export default function Recipes() {
                 </button>
               </div>
               
-              <h3 className="text-xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1">{recipe.name}</h3>
+              <h3 className="text-xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1 capitalize">{recipe.name}</h3>
               
               <div className="mt-8 pt-6 border-t border-slate-50 flex justify-between items-center">
                 <div className="flex flex-col">

@@ -89,7 +89,7 @@ export default function RecipeDetail() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(16, 185, 129); // emerald-500
-      doc.text('PSRestoCost ERP Engine', MARGIN, 10);
+      doc.text('PSRestoCost ERP Engine', MARGIN + CONTENT_WIDTH, 10, { align: 'right' });
       
       doc.setDrawColor(241, 245, 249); // slate-100
       doc.line(MARGIN, 12, MARGIN + CONTENT_WIDTH, 12);
@@ -246,7 +246,7 @@ export default function RecipeDetail() {
         doc.setTextColor(148, 163, 184); // slate-400
         
         // Draw bottom-pinned footer
-        const footerY = pageHeight - 15;
+        const footerY = pageHeight - 10;
         
         doc.setDrawColor(241, 245, 249);
         doc.line(MARGIN, footerY - 5, MARGIN + CONTENT_WIDTH, footerY - 5); // Separation line

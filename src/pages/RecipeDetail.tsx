@@ -68,8 +68,15 @@ export default function RecipeDetail() {
 
     try {
       const hpp = calculateHPP(recipe, ingredients);
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [210, 297] });
-      const fileName = `Resep_${recipe.name.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}`;
+      const doc = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const MARGIN = 20;
+      const PAGE_WIDTH = 210;
+      const CONTENT_WIDTH = PAGE_WIDTH - (2 * MARGIN); // 170mm
 
       doc.setProperties({
         title: `Resep - ${recipe.name}`,
@@ -82,40 +89,40 @@ export default function RecipeDetail() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(16, 185, 129); // emerald-500
-      doc.text('PSRestoCost ERP Engine', 14, 15);
+      doc.text('PSRestoCost ERP Engine', MARGIN, 15);
       
       doc.setDrawColor(241, 245, 249); // slate-100
-      doc.line(14, 17, 196, 17);
+      doc.line(MARGIN, 17, MARGIN + CONTENT_WIDTH, 17);
 
       doc.setFontSize(18);
       doc.setTextColor(15, 23, 42); // slate-900
-      doc.text(recipe.name.toUpperCase(), 14, 28);
+      doc.text(recipe.name.toUpperCase(), MARGIN, 28);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(100, 116, 139); // slate-500
-      doc.text(`ID Resep: #${recipe.id.toString().padStart(4, '0')}`, 14, 34);
-      doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 14, 39);
+      doc.text(`ID Resep: #${recipe.id.toString().padStart(4, '0')}`, MARGIN, 34);
+      doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, MARGIN, 39);
       
       // Metadata Grid
       doc.setFillColor(248, 250, 252); // slate-50
-      doc.roundedRect(14, 44, 182, 12, 2, 2, 'F');
+      doc.roundedRect(MARGIN, 44, CONTENT_WIDTH, 12, 2, 2, 'F');
       
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(71, 85, 105); // slate-600
-      doc.text('Waste Buffer:', 18, 51.5);
+      doc.text('Waste Buffer:', MARGIN + 4, 51.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.buffer_percentage}%`, 45, 51.5);
+      doc.text(`${recipe.buffer_percentage}%`, MARGIN + 31, 51.5);
       
       doc.setFont('helvetica', 'bold');
-      doc.text('Target Porsi:', 80, 51.5);
+      doc.text('Target Porsi:', MARGIN + 66, 51.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.target_portions} Porsi`, 105, 51.5);
+      doc.text(`${recipe.target_portions} Porsi`, MARGIN + 91, 51.5);
       
       doc.setFont('helvetica', 'bold');
-      doc.text('Target Margin:', 140, 51.5);
+      doc.text('Target Margin:', MARGIN + 126, 51.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.target_margin}%`, 170, 51.5);
+      doc.text(`${recipe.target_margin}%`, MARGIN + 156, 51.5);
 
       const fmtVal = (n: number) => n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
 
@@ -139,6 +146,7 @@ export default function RecipeDetail() {
 
       autoTable(doc, {
         startY: 62,
+        margin: { left: MARGIN, right: MARGIN },
         head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', '', 'Harga/Unit', '', 'Subtotal']],
         body: bomData,
         headStyles: { 
@@ -158,14 +166,14 @@ export default function RecipeDetail() {
           overflow: 'linebreak'
         },
         columnStyles: {
-        0: { cellWidth: 10, halign: 'center' },
+          0: { cellWidth: 10, halign: 'center' },
           1: { cellWidth: 'auto' },
-          2: { cellWidth: 30, halign: 'center' },
-          3: { cellWidth: 25, halign: 'center' },
-          4: { cellWidth: 7, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          5: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 2 } },
-          6: { cellWidth: 7, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          7: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
+          2: { cellWidth: 25, halign: 'center' },
+          3: { cellWidth: 23, halign: 'center' },
+          4: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          5: { cellWidth: 18, halign: 'right', cellPadding: { left: 0, right: 2 } },
+          6: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          7: { cellWidth: 18, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
         },
         headStyles: {
            halign: 'center'
@@ -185,7 +193,7 @@ export default function RecipeDetail() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(12);
       doc.setTextColor(15, 23, 42);
-      doc.text('Rincian Biaya & Profitabilitas', 14, currentY);
+      doc.text('Rincian Biaya & Profitabilitas', MARGIN, currentY);
 
       const laborCost = hpp.primeCost - hpp.rawMaterialCost - hpp.packagingCost;
       const overheadCost = hpp.totalOperationalCost - laborCost;
@@ -219,10 +227,10 @@ export default function RecipeDetail() {
         startY: currentY + 5,
         body: summaryData,
         theme: 'plain',
-        margin: { left: 14, right: 14 },
+        margin: { left: MARGIN, right: MARGIN },
         styles: { fontSize: 9, cellPadding: 3, halign: 'left' },
         columnStyles: {
-          0: { cellWidth: 147, cellPadding: { left: 0, top: 3, bottom: 3 } },
+          0: { cellWidth: CONTENT_WIDTH - 35, cellPadding: { left: 0, top: 3, bottom: 3 } },
           1: { cellWidth: 7, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
           2: { halign: 'right', cellWidth: 28, cellPadding: { right: 0, top: 3, bottom: 3 } },
         },
@@ -239,13 +247,13 @@ export default function RecipeDetail() {
         doc.setTextColor(148, 163, 184); // slate-400
         
         // Draw bottom-pinned footer
-        const footerY = pageHeight - 10;
+        const footerY = pageHeight - 15;
         
         doc.setDrawColor(241, 245, 249);
-        doc.line(14, footerY - 5, 196, footerY - 5); // Separation line
+        doc.line(MARGIN, footerY - 5, MARGIN + CONTENT_WIDTH, footerY - 5); // Separation line
         
-        doc.text('Dokumen ini dihasilkan secara otomatis oleh PSRestoCost ERP Engine.', 14, footerY);
-        doc.text(`Halaman ${i} dari ${pageCount}`, 196, footerY, { align: 'right' });
+        doc.text('Dokumen ini dihasilkan secara otomatis oleh PSRestoCost ERP Engine.', MARGIN, footerY);
+        doc.text(`Halaman ${i} dari ${pageCount}`, MARGIN + CONTENT_WIDTH, footerY, { align: 'right' });
       }
 
       // ── Save with explicit filename ──

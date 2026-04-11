@@ -22,7 +22,7 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
         <div className="space-y-6">
           {/* COGS */}
           <div className="space-y-3 text-sm">
-            <p className="text-[10px] font-bold text-emerald-200 uppercase tracking-widest border-b border-emerald-500/50 pb-1">HPP (COGS)</p>
+            <p className="text-[10px] font-black text-emerald-50 uppercase tracking-widest border-b border-emerald-500/50 pb-1">HPP (COGS)</p>
             {[
               { label: 'Bahan Baku', value: hppResult.rawMaterialCost },
               { label: 'Kemasan', value: hppResult.packagingCost },
@@ -34,14 +34,14 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
               </div>
             ))}
             <div className="flex justify-between items-center text-white mt-2 pt-2 border-t border-emerald-500/50">
-              <span className="font-bold">Total HPP</span>
-              <span className="font-black text-lg">Rp {hppResult.totalHPP.toLocaleString('id-ID')}</span>
+              <span className="font-black">Total HPP</span>
+              <span className="font-black text-xl">Rp {hppResult.totalHPP.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
           {/* OPEX */}
           <div className="space-y-3 text-sm">
-            <p className="text-[10px] font-bold text-emerald-200 uppercase tracking-widest border-b border-emerald-500/50 pb-1">Beban Operasi (OPEX)</p>
+            <p className="text-[10px] font-black text-emerald-50 uppercase tracking-widest border-b border-emerald-500/50 pb-1">Beban Operasi (OPEX)</p>
             {[
               { label: 'Tenaga Kerja', value: laborCost },
               { label: 'Overhead', value: overheadCost },
@@ -51,22 +51,22 @@ const HPPSummarySection: React.FC<HPPSummarySectionProps> = ({ hppResult }) => {
                 <span className="font-bold">Rp {item.value.toLocaleString('id-ID')}</span>
               </div>
             ))}
-            <div className="flex justify-between items-center text-emerald-100 mt-2 pt-2 border-t border-emerald-500/50">
-              <span className="font-medium">Total OPEX</span>
-              <span className="font-bold">Rp {hppResult.totalOperationalCost.toLocaleString('id-ID')}</span>
+            <div className="flex justify-between items-center text-white mt-2 pt-2 border-t border-emerald-500/50">
+              <span className="font-black opacity-90">Total OPEX</span>
+              <span className="font-black text-xl">Rp {hppResult.totalOperationalCost.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
           {/* PROFIT */}
           <div className="space-y-3 text-sm bg-black/10 -mx-4 p-4 rounded-2xl">
-            <p className="text-[10px] font-bold text-amber-200 uppercase tracking-widest border-b border-emerald-500/30 pb-1 mb-2">Estimasi Laba per Porsi</p>
+            <p className="text-[10px] font-black text-amber-200 uppercase tracking-widest border-b border-emerald-500/30 pb-1 mb-2">Estimasi Laba per Porsi</p>
             <div className="flex justify-between items-center text-emerald-50">
-               <span className="font-medium opacity-80">Gross Profit (Kotor)</span>
+               <span className="font-bold opacity-90">Gross Profit (Kotor)</span>
                <span className="font-bold">Rp {hppResult.grossProfit.toLocaleString('id-ID')}</span>
             </div>
             <div className="flex justify-between items-center text-white pt-1">
-               <span className="font-bold">Net Profit (Bersih)</span>
-               <span className="font-black text-amber-400 text-lg">Rp {hppResult.netProfit.toLocaleString('id-ID')}</span>
+               <span className="font-black">Net Profit (Bersih)</span>
+               <span className="font-black text-amber-400 text-2xl">Rp {hppResult.netProfit.toLocaleString('id-ID')}</span>
             </div>
           </div>
         </div>

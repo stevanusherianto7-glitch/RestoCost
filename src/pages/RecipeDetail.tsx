@@ -160,22 +160,22 @@ export default function RecipeDetail() {
         },
         alternateRowStyles: { fillColor: [252, 252, 252] },
         styles: { 
-          fontSize: 7.5, 
-          cellPadding: 2.5, 
+          fontSize: 7, 
+          cellPadding: 2, 
           font: 'helvetica',
           lineColor: [241, 245, 249],
           lineWidth: 0.1,
-          overflow: 'linebreak'
+          overflow: 'ellipsize' // Prevent stacking, cut off if absolutely necessary (though widths are optimized)
         },
         columnStyles: {
-          0: { cellWidth: 10, halign: 'center' },
+          0: { cellWidth: 7, halign: 'center' },
           1: { cellWidth: 'auto' },
           2: { cellWidth: 32, halign: 'center' },
-          3: { cellWidth: 20, halign: 'center' },
-          4: { cellWidth: 6, halign: 'left', cellPadding: { left: 1, right: 0 } },
-          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 1 } },
-          6: { cellWidth: 6, halign: 'left', cellPadding: { left: 1, right: 0 } },
-          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 1 }, fontStyle: 'bold' },
+          3: { cellWidth: 16, halign: 'center' },
+          4: { cellWidth: 5, halign: 'left', cellPadding: { left: 1, right: 0 } },
+          5: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 1 } },
+          6: { cellWidth: 5, halign: 'left', cellPadding: { left: 1, right: 0 } },
+          7: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 1 }, fontStyle: 'bold' },
         },
       });
 

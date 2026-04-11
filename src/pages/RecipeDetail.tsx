@@ -117,6 +117,8 @@ export default function RecipeDetail() {
       doc.setFont('helvetica', 'normal');
       doc.text(`${recipe.target_margin}%`, 170, 51.5);
 
+      const fmtVal = (n: number) => n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
+
       // ── BOM Table (Bill of Materials) ──
       const bomData = recipe.items.map((item, i) => {
         const ing = ingredients.find(x => x.id === item.ingredient_id);
@@ -125,16 +127,18 @@ export default function RecipeDetail() {
         return [
           { content: (i + 1).toString(), styles: { halign: 'center' } },
           ing?.name || '-',
-          CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-',
-          { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'right' } },
-          { content: fmtRp(costPerUnit), styles: { halign: 'right' } },
-          { content: fmtRp(subtotal), styles: { halign: 'right' } },
+          { content: CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-', styles: { halign: 'center' } },
+          { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'center' } },
+          { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
+          { content: fmtVal(costPerUnit), styles: { halign: 'right' } },
+          { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
+          { content: fmtVal(subtotal), styles: { halign: 'right' } },
         ];
       });
 
       autoTable(doc, {
         startY: 62,
-        head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', 'Harga/Unit', 'Subtotal']],
+        head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', '', 'Harga/Unit', '', 'Subtotal']],
         body: bomData,
         headStyles: { 
           fillColor: [15, 23, 42], 
@@ -149,12 +153,22 @@ export default function RecipeDetail() {
           cellPadding: 3, 
           font: 'helvetica',
           lineColor: [241, 245, 249],
-          lineWidth: 0.1
+          lineWidth: 0.1,
+          overflow: 'linebreak'
         },
         columnStyles: {
-          0: { cellWidth: 15 },
-          2: { cellWidth: 30 },
+          0: { cellWidth: 10, halign: 'center' },
+          1: { cellWidth: 'auto' },
+          2: { cellWidth: 30, halign: 'center' },
+          3: { cellWidth: 25, halign: 'center' },
+          4: { cellWidth: 8, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 } },
+          6: { cellWidth: 8, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
         },
+        headStyles: {
+           halign: 'center'
+        }
       });
 
       // ── Cost Summary & Analysis ──
@@ -175,17 +189,25 @@ export default function RecipeDetail() {
       const laborCost = hpp.primeCost - hpp.rawMaterialCost - hpp.packagingCost;
       const overheadCost = hpp.totalOperationalCost - laborCost;
 
+      // Status Colors
+      const EMERALD = [16, 185, 129];
+      const ROSE = [225, 29, 72];
+      const AMBER = [245, 158, 11];
+      
+      const profitColor = hpp.netProfit >= 0 ? EMERALD : ROSE;
+      const marginColor = recipe.selling_price > hpp.totalHPP ? EMERALD : AMBER;
+
       const summaryData = [
-        ['Bahan Baku & Kemasan', '', fmtRp(hpp.rawMaterialCost + hpp.packagingCost)],
-        [`Waste Buffer (${recipe.buffer_percentage}%)`, '', fmtRp(hpp.bufferCost)],
-        [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, '', { content: fmtRp(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
-        ['Beban Tenaga Kerja', '', fmtRp(laborCost)],
-        ['Beban Overhead', '', fmtRp(overheadCost)],
-        [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, '', { content: fmtRp(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        ['Bahan Baku & Kemasan', 'Rp', fmtVal(hpp.rawMaterialCost + hpp.packagingCost)],
+        [`Waste Buffer (${recipe.buffer_percentage}%)`, 'Rp', fmtVal(hpp.bufferCost)],
+        [{ content: 'TOTAL HPP (COGS)', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalHPP), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
+        ['Beban Tenaga Kerja', 'Rp', fmtVal(laborCost)],
+        ['Beban Overhead', 'Rp', fmtVal(overheadCost)],
+        [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
         ['', '', ''],
-        [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }, '', { content: fmtRp(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: [16, 185, 129] } }],
-        ['Laba Kotor (Gross Profit)', '', fmtRp(hpp.grossProfit)],
-        [{ content: 'LABA BERSIH (NET PROFIT)', styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }, '', { content: fmtRp(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: [16, 185, 129], textColor: 255 } }],
+        [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: 'Rp', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: fmtVal(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: marginColor } }],
+        ['Laba Kotor (Gross Profit)', 'Rp', fmtVal(hpp.grossProfit)],
+        [{ content: 'LABA BERSIH (NET PROFIT)', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }],
       ];
 
       autoTable(doc, {
@@ -195,20 +217,30 @@ export default function RecipeDetail() {
         margin: { left: 14, right: 14 },
         styles: { fontSize: 9, cellPadding: 3, halign: 'left' },
         columnStyles: {
-          0: { cellWidth: 80 },
-          1: { cellWidth: 40 },
-          2: { halign: 'right', cellWidth: 62 },
+          0: { cellWidth: 100, cellPadding: { left: 0, top: 3, bottom: 3 } },
+          1: { cellWidth: 15, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
+          2: { halign: 'right', cellWidth: 67, cellPadding: { right: 0, top: 3, bottom: 3 } },
         },
       });
 
       // ── Footer ──
       const pageCount = doc.getNumberOfPages();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(148, 163, 184); // slate-400
-        doc.text('Dokumen ini dihasilkan secara otomatis oleh PSRestoCost ERP Engine.', 14, 285);
-        doc.text(`Halaman ${i} dari ${pageCount}`, 196, 285, { align: 'right' });
+        
+        // Draw bottom-pinned footer
+        const footerY = pageHeight - 10;
+        
+        doc.setDrawColor(241, 245, 249);
+        doc.line(14, footerY - 5, 196, footerY - 5); // Separation line
+        
+        doc.text('Dokumen ini dihasilkan secara otomatis oleh PSRestoCost ERP Engine.', 14, footerY);
+        doc.text(`Halaman ${i} dari ${pageCount}`, 196, footerY, { align: 'right' });
       }
 
       // ── Save with explicit filename ──

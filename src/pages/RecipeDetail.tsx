@@ -154,7 +154,8 @@ export default function RecipeDetail() {
           textColor: 255, 
           fontStyle: 'bold',
           fontSize: 9,
-          cellPadding: 4
+          cellPadding: 4,
+          halign: 'center'
         },
         alternateRowStyles: { fillColor: [252, 252, 252] },
         styles: { 
@@ -171,13 +172,10 @@ export default function RecipeDetail() {
           2: { cellWidth: 25, halign: 'center' },
           3: { cellWidth: 23, halign: 'center' },
           4: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          5: { cellWidth: 18, halign: 'right', cellPadding: { left: 0, right: 2 } },
+          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 } },
           6: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          7: { cellWidth: 18, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
+          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
         },
-        headStyles: {
-           halign: 'center'
-        }
       });
 
       // ── Cost Summary & Analysis ──

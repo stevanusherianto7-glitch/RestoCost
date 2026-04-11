@@ -87,7 +87,7 @@ export default function RecipeDetail() {
       doc.setDrawColor(241, 245, 249); // slate-100
       doc.line(14, 17, 196, 17);
 
-      doc.setFontSize(24);
+      doc.setFontSize(18);
       doc.setTextColor(15, 23, 42); // slate-900
       doc.text(recipe.name.toUpperCase(), 14, 28);
 
@@ -124,9 +124,10 @@ export default function RecipeDetail() {
         const ing = ingredients.find(x => x.id === item.ingredient_id);
         const costPerUnit = ing && ing.conversion_qty > 0 ? ing.buy_price / ing.conversion_qty : 0;
         const subtotal = costPerUnit * item.amount;
+        const ingName = ing?.name ? ing.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()) : '-';
         return [
           { content: (i + 1).toString(), styles: { halign: 'center' } },
-          ing?.name || '-',
+          ingName,
           { content: CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-', styles: { halign: 'center' } },
           { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'center' } },
           { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
@@ -161,10 +162,10 @@ export default function RecipeDetail() {
           1: { cellWidth: 'auto' },
           2: { cellWidth: 30, halign: 'center' },
           3: { cellWidth: 25, halign: 'center' },
-          4: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          5: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 2 } },
-          6: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          7: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
+          4: { cellWidth: 7, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          5: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 2 } },
+          6: { cellWidth: 7, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          7: { cellWidth: 20, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
         },
         headStyles: {
            halign: 'center'
@@ -217,9 +218,9 @@ export default function RecipeDetail() {
         margin: { left: 14, right: 14 },
         styles: { fontSize: 9, cellPadding: 3, halign: 'left' },
         columnStyles: {
-          0: { cellWidth: 120, cellPadding: { left: 0, top: 3, bottom: 3 } },
-          1: { cellWidth: 8, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
-          2: { halign: 'right', cellWidth: 54, cellPadding: { right: 0, top: 3, bottom: 3 } },
+          0: { cellWidth: 147, cellPadding: { left: 0, top: 3, bottom: 3 } },
+          1: { cellWidth: 7, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
+          2: { halign: 'right', cellWidth: 28, cellPadding: { right: 0, top: 3, bottom: 3 } },
         },
       });
 

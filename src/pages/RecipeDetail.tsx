@@ -173,9 +173,9 @@ export default function RecipeDetail() {
           2: { cellWidth: 32, halign: 'center' },
           3: { cellWidth: 18, halign: 'center' },
           4: { cellWidth: 5, halign: 'left', cellPadding: { left: 0.5, right: 0 } },
-          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 0.5 } },
+          5: { cellWidth: 22, halign: 'center' }, // Center align numeric value
           6: { cellWidth: 5, halign: 'left', cellPadding: { left: 0.5, right: 0 } },
-          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 0.5 }, fontStyle: 'bold' },
+          7: { cellWidth: 22, halign: 'center', fontStyle: 'bold' }, // Center align subtotal value
         },
       });
 

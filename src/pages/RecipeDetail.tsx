@@ -157,14 +157,14 @@ export default function RecipeDetail() {
           overflow: 'linebreak'
         },
         columnStyles: {
-          0: { cellWidth: 10, halign: 'center' },
+        0: { cellWidth: 10, halign: 'center' },
           1: { cellWidth: 'auto' },
           2: { cellWidth: 30, halign: 'center' },
           3: { cellWidth: 25, halign: 'center' },
-          4: { cellWidth: 8, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          5: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 } },
-          6: { cellWidth: 8, halign: 'left', cellPadding: { left: 2, right: 0 } },
-          7: { cellWidth: 22, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
+          4: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          5: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 2 } },
+          6: { cellWidth: 6, halign: 'left', cellPadding: { left: 2, right: 0 } },
+          7: { cellWidth: 24, halign: 'right', cellPadding: { left: 0, right: 2 }, fontStyle: 'bold' },
         },
         headStyles: {
            halign: 'center'
@@ -206,7 +206,7 @@ export default function RecipeDetail() {
         [{ content: 'TOTAL OPEX', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }, { content: fmtVal(hpp.totalOperationalCost), styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } }],
         ['', '', ''],
         [{ content: 'HARGA JUAL (NETT)', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: 'Rp', styles: { fontStyle: 'bold', textColor: marginColor } }, { content: fmtVal(recipe.selling_price || 0), styles: { fontStyle: 'bold', textColor: marginColor } }],
-        ['Laba Kotor (Gross Profit)', 'Rp', fmtVal(hpp.grossProfit)],
+        [{ content: 'Laba Kotor (Gross Profit)', styles: { fontStyle: 'bold' } }, { content: 'Rp', styles: { fontStyle: 'bold' } }, { content: fmtVal(hpp.grossProfit), styles: { fontStyle: 'bold' } }],
         [{ content: 'LABA BERSIH (NET PROFIT)', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: 'Rp', styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }, { content: fmtVal(hpp.netProfit), styles: { fontStyle: 'bold', fillColor: profitColor, textColor: 255 } }],
       ];
 
@@ -217,9 +217,9 @@ export default function RecipeDetail() {
         margin: { left: 14, right: 14 },
         styles: { fontSize: 9, cellPadding: 3, halign: 'left' },
         columnStyles: {
-          0: { cellWidth: 100, cellPadding: { left: 0, top: 3, bottom: 3 } },
-          1: { cellWidth: 15, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
-          2: { halign: 'right', cellWidth: 67, cellPadding: { right: 0, top: 3, bottom: 3 } },
+          0: { cellWidth: 120, cellPadding: { left: 0, top: 3, bottom: 3 } },
+          1: { cellWidth: 8, halign: 'left', cellPadding: { left: 0, top: 3, bottom: 3 } },
+          2: { halign: 'right', cellWidth: 54, cellPadding: { right: 0, top: 3, bottom: 3 } },
         },
       });
 

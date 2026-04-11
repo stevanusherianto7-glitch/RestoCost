@@ -155,7 +155,8 @@ export default function RecipeDetail() {
           fontStyle: 'bold',
           fontSize: 9,
           cellPadding: 4,
-          halign: 'center'
+          halign: 'center',
+          valign: 'middle'
         },
         alternateRowStyles: { fillColor: [252, 252, 252] },
         styles: { 

@@ -169,7 +169,7 @@ export default function ERPDashboard() {
             lowStock.map(ing => (
               <div key={ing.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-slate-900">{ing.name}</p>
+                  <p className="font-bold text-slate-900 capitalize">{ing.name}</p>
                   <p className="text-xs text-rose-600 font-medium">Sisa: {ing.current_stock} {ing.buy_unit}</p>
                 </div>
                 <div className="text-right">

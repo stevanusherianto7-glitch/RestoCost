@@ -68,6 +68,5 @@ Biaya di luar bahan baku yang harus ditanggung oleh menu tersebut.
 
 > [!CAUTION]
 > **Jangan Menghapus Bahan Baku** yang sedang digunakan di dalam resep aktif. Hal ini akan menyebabkan error pada perhitungan HPP resep tersebut.
-
 > [!NOTE]
 > Jika harga bahan baku naik dari supplier, segera update di **Database Bahan Baku**. Seluruh resep yang menggunakan bahan tersebut akan otomatis memperbarui harga modalnya secara real-time.

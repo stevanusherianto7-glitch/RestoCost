@@ -138,9 +138,9 @@ export default function RecipeDetail() {
           { content: CATEGORY_LABELS[ing?.category || ''] || ing?.category || '-', styles: { halign: 'center' } },
           { content: `${item.amount} ${ing?.usage_unit || ''}`, styles: { halign: 'center' } },
           { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
-          { content: fmtVal(costPerUnit), styles: { halign: 'right' } },
+          { content: fmtVal(costPerUnit), styles: { halign: 'center' } },
           { content: 'Rp', styles: { halign: 'left', textColor: [100, 116, 139] } },
-          { content: fmtVal(subtotal), styles: { halign: 'right' } },
+          { content: fmtVal(subtotal), styles: { halign: 'center' } },
         ];
       });
 

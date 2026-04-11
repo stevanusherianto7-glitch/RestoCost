@@ -89,40 +89,40 @@ export default function RecipeDetail() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(16, 185, 129); // emerald-500
-      doc.text('PSRestoCost ERP Engine', MARGIN, 15);
+      doc.text('PSRestoCost ERP Engine', MARGIN, 10);
       
       doc.setDrawColor(241, 245, 249); // slate-100
-      doc.line(MARGIN, 17, MARGIN + CONTENT_WIDTH, 17);
+      doc.line(MARGIN, 12, MARGIN + CONTENT_WIDTH, 12);
 
       doc.setFontSize(18);
       doc.setTextColor(15, 23, 42); // slate-900
-      doc.text(recipe.name.toUpperCase(), MARGIN, 28);
+      doc.text(recipe.name.toUpperCase(), MARGIN, 22);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
       doc.setTextColor(100, 116, 139); // slate-500
-      doc.text(`ID Resep: #${recipe.id.toString().padStart(4, '0')}`, MARGIN, 34);
-      doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, MARGIN, 39);
+      doc.text(`ID Resep: #${recipe.id.toString().padStart(4, '0')}`, MARGIN, 28);
+      doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, MARGIN, 33);
       
       // Metadata Grid
       doc.setFillColor(248, 250, 252); // slate-50
-      doc.roundedRect(MARGIN, 44, CONTENT_WIDTH, 12, 2, 2, 'F');
+      doc.roundedRect(MARGIN, 38, CONTENT_WIDTH, 12, 2, 2, 'F');
       
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(71, 85, 105); // slate-600
-      doc.text('Waste Buffer:', MARGIN + 4, 51.5);
+      doc.text('Waste Buffer:', MARGIN + 4, 45.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.buffer_percentage}%`, MARGIN + 31, 51.5);
+      doc.text(`${recipe.buffer_percentage}%`, MARGIN + 31, 45.5);
       
       doc.setFont('helvetica', 'bold');
-      doc.text('Target Porsi:', MARGIN + 66, 51.5);
+      doc.text('Target Porsi:', MARGIN + 66, 45.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.target_portions} Porsi`, MARGIN + 91, 51.5);
+      doc.text(`${recipe.target_portions} Porsi`, MARGIN + 91, 45.5);
       
       doc.setFont('helvetica', 'bold');
-      doc.text('Target Margin:', MARGIN + 126, 51.5);
+      doc.text('Target Margin:', MARGIN + 126, 45.5);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${recipe.target_margin}%`, MARGIN + 156, 51.5);
+      doc.text(`${recipe.target_margin}%`, MARGIN + 156, 45.5);
 
       const fmtVal = (n: number) => n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
 
@@ -145,7 +145,7 @@ export default function RecipeDetail() {
       });
 
       autoTable(doc, {
-        startY: 62,
+        startY: 54,
         margin: { left: MARGIN, right: MARGIN },
         head: [['No', 'Deskripsi Bahan Baku', 'Kategori', 'Takaran', '', 'Harga/Unit', '', 'Subtotal']],
         body: bomData,
